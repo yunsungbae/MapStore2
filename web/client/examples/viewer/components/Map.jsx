@@ -9,7 +9,7 @@ var React = require('react');
 var url = require('url');
 
 const urlQuery = url.parse(window.location.href, true).query;
-const mapType = urlQuery.type || 'leaflet';
+const mapType = urlQuery.type || 'openlayers';
 
 var {LMap,
     LLayer,
