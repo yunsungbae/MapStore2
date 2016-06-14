@@ -12,40 +12,43 @@ const ImportsGrid = require('./ImportsGrid');
 const FileUploader = require('../../file/FileUploader');
 const Task = require('./Task');
 const Import = require('./Import');
+const Transform = require('./Transform');
 const {Grid, Col, Row} = require('react-bootstrap');
+const BreadCrumb = require('./BreadCrumb');
 const Importer = React.createClass({
     propTypes: {
         loading: React.PropTypes.bool,
         error: React.PropTypes.object,
-        importCreationDefaults: React.PropTypes.object,
+        defaultPresets: React.PropTypes.string,
+        /**
+         * Presets: {PRESET_ID: [changes: [{target: {}, layer: {}}], match: function() {...}, transforms: [{}, {}] }]}
+         */
+        presets: React.PropTypes.object,
         uploading: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.object]),
         createImport: React.PropTypes.func,
+        runImport: React.PropTypes.func,
         updateTask: React.PropTypes.func,
         loadImport: React.PropTypes.func,
         deleteImport: React.PropTypes.func,
         deleteTask: React.PropTypes.func,
         loadTask: React.PropTypes.func,
+        loadTransform: React.PropTypes.func,
+        deleteTransform: React.PropTypes.func,
+        updateTranform: React.PropTypes.func,
         uploadImportFiles: React.PropTypes.func,
         selectedImport: React.PropTypes.object,
         selectedTask: React.PropTypes.object,
+        selectedTransform: React.PropTypes.object,
         imports: React.PropTypes.array,
         onMount: React.PropTypes.func
     },
     getDefaultProps() {
         return {
-            importCreationDefaults: {
-                "import": {
-                    "targetWorkspace": {
-                        "workspace": {
-                            "name": "cite"
-                        }
-                    }
-                }
-
-            },
             createImport: () => {},
             loadImport: () => {},
             loadTask: () => {},
+            loadTransform: () => {},
+            deleteTransform: () => {},
             uploadImportFiles: () => {},
             onMount: () => {},
             imports: []
@@ -54,6 +57,26 @@ const Importer = React.createClass({
     componentDidMount() {
         this.props.onMount();
     },
+    getPresets() {
+        return this.props.presets && this.props.presets[this.props.defaultPresets];
+    },
+    getImportCreationDefaults() {
+        let presets = this.getPresets();
+        if (!presets) {
+            return {
+                importCreationDefaults: {
+                    "import": {
+                        "targetWorkspace": {
+                            "workspace": {
+                                "name": "cite"
+                            }
+                        }
+                    }
+                }
+            };
+        }
+        return presets.find((preset) => preset.import );
+    },
     renderLoading() {
         if (this.props.loading) {
             return <div style={{"float": "right"}}><Spinner noFadeIn spinnerName="circle"/></div>;
@@ -61,32 +84,48 @@ const Importer = React.createClass({
         return null;
     },
     renderDetails() {
+        let breadcrumb = (<BreadCrumb
+            selectedImport={this.props.selectedImport}
+            selectedTask={this.props.selectedTask}
+            selectedTransform={this.props.selectedTransform}
+            loadImports={this.props.onMount}
+            loadImport={this.props.loadImport}
+            loadTask={this.props.loadTask}
+            loadTransform={this.props.loadTransform}
+            />);
+        if ( this.props.selectedImport && this.props.selectedTask && this.props.selectedTransform) {
+            return (<div>
+            {breadcrumb}
+            <h2>Transform {this.props.selectedTransform.id}</h2>
+            <Transform transform={this.props.selectedTransform}/>
+            </div>);
+        }
         if ( this.props.selectedImport && this.props.selectedTask) {
             return (<div>
-            <ol className="breadcrumb">
-              <li><a href="#" onClick={(e) => {e.preventDefault(); this.props.onMount(); }}><Message msgId="importer.imports" /></a></li>
-              <li><a href="#" onClick={(e) => {e.preventDefault(); this.props.loadImport(this.props.selectedImport.id); }}>
-                  <Message msgId="importer.importN" msgParams={{id: this.props.selectedImport.id}}/>
-              </a></li>
-              <li className="active">Task {this.props.selectedTask.id}</li>
-            </ol>
+            {breadcrumb}
             <h2>Import {this.props.selectedImport.id}</h2>
-            <Task updateTask={this.props.updateTask.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)} task={this.props.selectedTask}/>
+            <Task
+                task={this.props.selectedTask}
+                updateTask={this.props.updateTask.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                deleteTransform={this.props.deleteTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                loadTransform={this.props.loadTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                />
             </div>);
         }
         if (this.props.selectedImport) {
             return (<div>
-                <ol className="breadcrumb">
-                  <li><a href="#" onClick={(e) => {e.preventDefault(); this.props.onMount(); }}><Message msgId="importer.importN" msgParams={{id: this.props.selectedImport.id}}/></a></li>
-                  <li className="active"><Message msgId="importer.importN" msgParams={{id: this.props.selectedImport.id}}/></li>
-                </ol>
-                <Import deleteTask={this.props.deleteTask} deleteImport={this.props.deleteImport} loadTask={this.props.loadTask.bind(null, this.props.selectedImport.id)} import={this.props.selectedImport} />
+                {breadcrumb}
+                <Import
+                    import={this.props.selectedImport}
+                    loadTask={this.props.loadTask.bind(null, this.props.selectedImport.id)}
+                    runImport={this.props.runImport}
+                    deleteTask={this.props.deleteTask}
+                    deleteImport={this.props.deleteImport}
+                     />
                 </div>);
         }
         return (<div>
-                <ol className="breadcrumb">
-                  <li className="active"><Message msgId="importer.imports" /></li>
-                </ol>
+                {breadcrumb}
                 <ImportsGrid
                 deleteImport={this.props.deleteImport}
                 loadImport={this.props.loadImport}
@@ -117,8 +156,9 @@ const Importer = React.createClass({
                         dropMessage={<Message msgId={message} />}
                         uploading={this.props.uploading}
                         allowUpload={this.props.selectedImport}
-                        onBeforeUpload={this.props.createImport.bind(null, this.props.importCreationDefaults)}
-                        onUpload={this.props.uploadImportFiles.bind(null, this.props.selectedImport && this.props.selectedImport.id)} />
+                        onBeforeUpload={this.props.createImport.bind(null, this.getImportCreationDefaults())}
+                        onUpload={this.props.uploadImportFiles.bind(null, this.props.selectedImport && this.props.selectedImport.id)}
+                        uploadAdditionalParams={this.getPresets()} />
                     </Col>
                 </Row>
                 <Row>

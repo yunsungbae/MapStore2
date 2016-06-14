@@ -354,6 +354,53 @@
             "pageInfo": "Results {start}-{end} of {total}",
             "noRecordsMatched": "No record matched"
         },
+        "uploader": {
+            "filename": "File Name",
+            "type": "Type",
+            "lastModified": "Last Modified",
+            "filesize": "Size",
+            "beforeUpload": " Doing pre-upload operations... ",
+            "uploadingFiles": "Uploading Files...",
+            "dropfile": "drop files here to upload",
+            "dropfileImport": "drop here files to add it to this process"
+        },
+        "importer": {
+            "imports": "Import Processes",
+            "importN": "Process {id}",
+            "creatingImportProcess": " Creating Import Process... ",
+            "dropfile": "drop files here to create a new importing process",
+            "dropfileImport": "drop here files to add it to this process",
+            "process": "Process",
+            "import": {
+                "actions": "Actions",
+                "tasks": "Packages",
+                "runImport": "Run",
+                "deleteImport": "Delete Process",
+                "deleteTask": "Delete",
+                "status": "Status",
+                "archive": "Archive",
+                "deleting": "Deleting...",
+                "applyingPreset": "Applying Presets..."
+            },
+            "task": {
+                "panelTitle": "Import Package {id}",
+                "status": "Status",
+                "updateMode": "Update Mode",
+                "originalData": "Original File",
+                "format": "Format",
+                "targetStore": "Target Store",
+                "storeType": "Store Type",
+                "storeName": "Store Name",
+                "transforms": "Trasformations Chain"
+            },
+            "transform": {
+                "panelTitle": "Transformation {id}",
+                "type": "Transformation Type",
+                "actions": "Actions",
+                "options": "Transformation Options",
+                "overviewlevels": "Overview Levels"
+            }
+        },
         "rasterstyler": {
             "tooltip": "Create and edit raster layer style",
             "paneltitle": "Raster Styler",

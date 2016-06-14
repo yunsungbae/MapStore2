@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const Spinner = require('react-spinkit');
+const Message = require('../../I18N/Message');
 const {Table, Glyphicon, Button, Label} = require('react-bootstrap');
 
 const ImportsGrid = React.createClass({
@@ -27,17 +28,29 @@ const ImportsGrid = React.createClass({
     getbsStyleForState(state) {
         switch (state) {
             case "NO_FORMAT":
+            case "BAD_FORMAT":
                 return "danger";
             case "READY":
             case "PENDING":
                 return "info";
+            case "COMPLETE":
+                return "success";
             default:
                 return "default";
+
+        }
+    },
+    renderLoadingMessage(importObj) {
+        switch (importObj.message) {
+            case "deleting":
+                return <Message msg="importer.import.deleting" />;
+            default:
+                return null;
         }
     },
     renderLoadingImport(importObj) {
         if (importObj.loading) {
-            return <div style={{"float": "right"}}><Spinner noFadeIn spinnerName="circle"/></div>;
+            return <div style={{"float": "right"}}>{this.renderLoadingMessage(importObj)}<Spinner noFadeIn spinnerName="circle"/></div>;
         }
         return null;
     },

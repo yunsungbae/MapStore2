@@ -7,19 +7,25 @@
  */
 const React = require('react');
 const {Grid, Col, Row, Panel, Label} = require('react-bootstrap');
+const Spinner = require('react-spinkit');
 const {DropdownList} = require('react-widgets');
-const {Message} = require('../../I18N/Message');
+const {Message} = require('../../I18N/I18N');
 const Layer = require('./Layer');
+const TransformsGrid = require('./TransformsGrid');
 
 const Task = React.createClass({
     propTypes: {
         task: React.PropTypes.object,
-        updateTask: React.PropTypes.func
+        updateTask: React.PropTypes.func,
+        loadTransform: React.PropTypes.func,
+        deleteTransform: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             task: {},
-            updateTask: () => {}
+            updateTask: () => {},
+            loadTransform: () => {},
+            deleteTransform: () => {}
         };
     },
     getbsStyleForState(state) {
@@ -27,10 +33,20 @@ const Task = React.createClass({
             case "READY":
                 return "info";
             case "NO_FORMAT":
+            case "BAD_FORMAT":
                 return "danger";
             default:
                 return "default";
 
+        }
+    },
+    renderLoading(element) {
+        if (this.props.task.loading ) {
+            if (!element) {
+                return <Spinner spinnerName="circle" />;
+            } else if (this.props.task.element === element) {
+                return <Spinner spinnerName="circle" />;
+            }
         }
     },
     renderGeneral(task) {
@@ -52,12 +68,12 @@ const Task = React.createClass({
         </Panel>);
     },
     renderTargetPanel(target) {
-        return (<Panel bsStyle="info" header={<span><Message msgId="importer.task.targetStore" /></span>}>
+        return (<Panel bsStyle="info" header={<span><Message msgId="importer.task.targetStore" />{this.renderLoading("target")}</span>}>
             <dl className="dl-horizontal">
               <dt><Message msgId="importer.task.storeType" /></dt>
-              <dd>{target.dataStore && target.dataStore.type}</dd>
+              <dd>{target.dataStore && target.dataStore.type || target.coverageStore && target.coverageStore.type}</dd>
               <dt><Message msgId="importer.task.storeName" /></dt>
-              <dd>{target.dataStore && target.dataStore.name}</dd>
+              <dd>{target.dataStore && target.dataStore.name || target.coverageStore && target.coverageStore.name}</dd>
             </dl>
         </Panel>);
     },
@@ -76,7 +92,18 @@ const Task = React.createClass({
                         {this.renderTargetPanel(this.props.task.target)}
                     </Col>
                     <Col lg={4} md={6} xs={12}>
-                        <Layer panProps={{bsStyle: "info"}} layer={this.props.task.layer}/>
+                        <Layer panProps={{bsStyle: "info" }} layer={this.props.task.layer}/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={12}>
+                        <TransformsGrid
+                            panProps={{bsStyle: "info" }}
+                            transforms={this.props.task.transformChain && this.props.task.transformChain.transforms}
+                            loadTransform={this.props.loadTransform}
+                            deleteTransform={this.props.deleteTransform}
+                            type={this.props.task.transformChain && this.props.task.transformChain.type}
+                             />
                     </Col>
                 </Row>
             </Grid>
@@ -84,7 +111,7 @@ const Task = React.createClass({
         );
     },
     updateMode(value) {
-        this.props.updateTask({
+        this.props.updateTask( null, null, {
             "updateMode": value
         });
     }

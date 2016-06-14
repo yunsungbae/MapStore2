@@ -23,7 +23,7 @@ const FileUploader = React.createClass({
         uploading: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.object]),
         onBeforeUpload: React.PropTypes.func,
         onUpload: React.PropTypes.func,
-        uploadAdditionalParams: React.PropTypes.object,
+        uploadAdditionalParams: React.PropTypes.oneOfType([React.PropTypes.array, React.PropTypes.object]),
         // if exists do not run before upload and start directly the upload after drag
         allowUpload: React.PropTypes.object
     },
@@ -76,7 +76,7 @@ const FileUploader = React.createClass({
                         {this.state.fileList && this.state.fileList.map((file) =>
                         (<tr>
                             <td key="name">{file.name}</td>
-                            <td key="size">{file.size}</td>
+                            <td key="size">{this.humanFileSize(file.size)}</td>
                             <td key="type">{file.type}</td>
                             <td key="last"><DateFormat value={file.lastModifiedDate} /></td>
                         </tr>) )
@@ -117,6 +117,10 @@ const FileUploader = React.createClass({
                 </div>
         </Dropzone>);
 
+    },
+    humanFileSize(size) {
+        var i = Math.floor( Math.log(size) / Math.log(1024) );
+        return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
     },
     uploadFiles(files) {
         if (!files) return;

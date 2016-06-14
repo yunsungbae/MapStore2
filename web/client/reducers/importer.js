@@ -12,12 +12,16 @@ const {
     IMPORTS_LIST_LOAD_ERROR,
     IMPORT_CREATED,
     IMPORT_LOADED,
+    IMPORT_RUN_SUCCESS,
+    IMPORT_RUN_ERROR,
     IMPORT_DELETE,
     IMPORTS_TASK_CREATED,
     IMPORTS_TASK_CREATION_ERROR,
     IMPORTS_TASK_LOADED,
     IMPORTS_TASK_UPDATED,
     IMPORTS_TASK_DELETE,
+    IMPORTS_TRANSFORM_LOAD,
+    IMPORTS_TRANSFORM_DELETE,
     IMPORTS_FILE_UPLOADED,
     IMPORTS_UPLOAD_PROGRESS
 } = require('../actions/importer');
@@ -39,37 +43,45 @@ function updateArray(tasks, newTask) {
     }
     return tasks;
 }
-function updateImportLoadingStatus(state, action) {
-    let importId = action.details.importId;
+function updateImportLoadingStatus(state, action, loading = true) {
+    let importId = action.importId !== undefined ? action.importId : (action.details && action.details.importId);
     let selectedImport = state && state.selectedImport;
     // TODO state.tasks update this if needed
     // update selected import
     let imports = state && state.imports;
     if (selectedImport && selectedImport.id === importId) {
-        selectedImport = assign({}, selectedImport, {loading: true});
+        selectedImport = assign({}, selectedImport, {loading: loading});
     }
     // update imports list
-    imports = updateArray(imports, assign({}, imports.find((imp) => imp.id === importId), {loading: true}));
+    imports = updateArray(imports, assign({}, imports.find((imp) => imp.id === importId), {loading: loading}));
     return assign({}, state, {
         uploading: action.details && action.details.uploadingFiles !== undefined || state.uploading,
-        loading: true,
+        loading: loading,
         selectedImport,
         imports
     });
 }
-function updateImportTaskLoadingStatus(state, action) {
+function updateImportTaskLoadingStatus(state, action, loading = true) {
     let selectedImport = state && state.selectedImport;
     let selectedTask = state && state.selectedTask;
     // TODO state.tasks update this if needed
     let imports = state && state.imports;
-    let importId = action.details.importId;
-    let taskId = action.details.taskId;
+    let importId = action.importId !== undefined ? action.importId : (action.details && action.details.importId);
+    let taskId = action.taskId !== undefined ? action.taskId : (action.details && action.details.taskId);
     // update selected import
     if (selectedImport && importId === selectedImport.id) {
         if ( selectedTask && selectedTask.id === taskId ) {
-            selectedTask = assign({}, selectedTask, {loading: true});
+            selectedTask = assign({}, selectedTask, {
+                loading: loading,
+                message: action.details && action.details.message,
+                element: action.details && action.details.element
+            });
         }
-        let newTask = assign({}, selectedImport.tasks.find((task) => task.id === taskId), {loading: true});
+        let newTask = assign({}, selectedImport.tasks.find((task) => task.id === taskId), {
+            loading: loading,
+            message: action.details && action.details.message,
+            element: action.details && action.details.element
+        });
         // update selected task
         if (selectedImport && selectedImport.tasks && newTask && newTask.id) {
             selectedImport = assign({}, selectedImport);
@@ -83,14 +95,18 @@ function updateImportTaskLoadingStatus(state, action) {
         let imp = imports[impIndex];
         let taskIndex = imp && imp.tasks && imp.tasks.findIndex((task) => task.id === taskId);
         if ( imp && imp.tasks && taskIndex >= 0 ) {
-            let task = assign({}, task, {loading: true});
+            let task = assign({}, task, {
+                loading: loading,
+                message: action.details && action.details.message,
+                element: action.details && action.details.element
+            });
             imports[impIndex] = assign({}, imp);
             imports[impIndex].tasks = updateArray(imports[impIndex].tasks, task);
         }
     }
     return assign({}, state, {
         uploading: action.details && action.details.uploadingFiles !== undefined || state.uploading,
-        loading: true,
+        loading: loading,
         selectedTask,
         selectedImport,
         imports
@@ -120,7 +136,8 @@ function importer(state = {}, action) {
                 loading: false,
                 imports: action.imports,
                 selectedImport: null,
-                selectedTask: null
+                selectedTask: null,
+                selectedTransform: null
             });
         case IMPORTS_LIST_LOAD_ERROR:
             return {
@@ -131,7 +148,8 @@ function importer(state = {}, action) {
             return assign({}, state, {
                 loading: false,
                 selectedImport: action.import,
-                selectedTask: null
+                selectedTask: null,
+                selectedTransform: null
             });
         case IMPORTS_TASK_CREATED:
             if (action.task || action.tasks && action.tasks.length === 1) {
@@ -170,17 +188,51 @@ function importer(state = {}, action) {
                 error: action.error
             });
         }
+        case IMPORTS_TRANSFORM_LOAD: {
+            let transform = assign({}, action.transform);
+            transform.id = action.transformId;
+            return assign({}, updateImportTaskLoadingStatus(state, action, false), {
+                loading: false,
+                selectedTransform: action.transform
+            });
+        }
+        case IMPORTS_TRANSFORM_DELETE: {
+            if (state.selectedTask &&
+                state.selectedTask.transformChain &&
+                state.selectedTask.transformChain.transforms &&
+                state.selectedTask.transformChain.transforms[action.transformId]
+                ) {
+                let newSelectedTask = assign({}, state.selectedTask, {
+                    transformsChain: assign({}, state.selectedTask.transformChain, {
+                        transforms: state.selectedTask.transformChain.transforms.filter((obj, index) => index !== action.transformId)
+                    })
+                });
+                return assign({}, state, {
+                    selectedTask: newSelectedTask,
+                    selectedTransform: state.selectedTransform && state.selectedTransform.id === action.transformId ? null : state.selectedTransform
+                });
+            }
+        }
         case IMPORT_LOADED: {
             return assign({}, state, {
                 loading: false,
                 selectedImport: action.import,
-                selectedTask: null
+                selectedTask: null,
+                selectedTransform: null
             });
+        }
+        case IMPORT_RUN_SUCCESS: {
+            return updateImportLoadingStatus(state, action, false);
+        }
+        case IMPORT_RUN_ERROR: {
+            return updateImportLoadingStatus(state, action, false);
+
         }
         case IMPORTS_TASK_LOADED: {
             return assign({}, state, {
                 loading: false,
-                selectedTask: action.task
+                selectedTask: action.task,
+                selectedTransform: null
             });
         }
         case IMPORTS_TASK_DELETE: {
@@ -210,7 +262,8 @@ function importer(state = {}, action) {
                     imports,
                     loading: false,
                     selectedImport: null,
-                    selectedTask: null
+                    selectedTask: null,
+                    selectedTransform: null
                 });
             }
             return assign({}, state, {

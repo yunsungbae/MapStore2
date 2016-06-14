@@ -14,6 +14,7 @@ const Task = React.createClass({
     propTypes: {
         "import": React.PropTypes.object,
         loadTask: React.PropTypes.func,
+        runImport: React.PropTypes.func,
         deleteImport: React.PropTypes.func,
         deleteTask: React.PropTypes.func
     },
@@ -21,6 +22,7 @@ const Task = React.createClass({
         return {
             "import": {},
             loadTask: () => {},
+            runImport: () => {},
             deleteImport: () => {},
             deleteTask: () => {}
         };
@@ -28,10 +30,13 @@ const Task = React.createClass({
     getbsStyleForState(state) {
         switch (state) {
             case "NO_FORMAT":
+            case "BAD_FORMAT":
                 return "danger";
             case "READY":
             case "PENDING":
                 return "info";
+            case "COMPLETE":
+                return "success";
             default:
                 return "default";
 
@@ -63,9 +68,21 @@ const Task = React.createClass({
             return <div style={{"float": "left"}}><Spinner noFadeIn spinnerName="circle"/></div>;
         }
     },
+    renderLoadingMessage(task) {
+        switch (task.message) {
+            case "applyPreset":
+                return <Message msgId="importer.import.applyingPreset"/>;
+            case "deleting":
+                return <Message msgId="importer.import.deleting" />;
+            default:
+                return null;
+        }
+    },
     renderLoadingTask(task) {
         if (task.loading) {
-            return <div style={{"float": "right"}}><Spinner noFadeIn spinnerName="circle"/></div>;
+            return (<div style={{"float": "right"}}>
+                {this.renderLoadingMessage(task)}
+                <Spinner noFadeIn spinnerName="circle"/></div>);
         }
         return null;
     },
@@ -77,6 +94,7 @@ const Task = React.createClass({
                     {this.renderGeneral(this.props.import)}
                 </Row>
                 <Row>
+                    <h3><Message msgId="importer.import.tasks" /></h3>
                     <Table striped bordered condensed hover>
                         <thead>
                           <tr>
@@ -90,8 +108,9 @@ const Task = React.createClass({
                         </tbody>
                     </Table>
                 </Row>
-                <Row>
-                    <Button bsStyle="danger" style={{"float": "right"}} onClick={() => {this.props.deleteImport(this.props.import.id); }}><Message msgId="importer.import.deleteImport" /></Button>
+                <Row style={{"float": "right"}}>
+                    <Button bsStyle="success" onClick={() => {this.props.runImport(this.props.import.id); }}><Message msgId="importer.import.runImport" /></Button>&nbsp;
+                    <Button bsStyle="danger" onClick={() => {this.props.deleteImport(this.props.import.id); }}><Message msgId="importer.import.deleteImport" /></Button>
                 </Row>
             </Grid>
             </Panel>

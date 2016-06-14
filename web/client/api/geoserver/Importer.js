@@ -27,13 +27,21 @@ var Api = {
         let url = geoserverBaseUrl + "imports/" + importId;
         return axios.get(url, options);
     },
-    updateTask: function( geoserverBaseUrl, importId, taskId, body, options) {
+    updateTask: function( geoserverBaseUrl, importId, taskId, element, body, options) {
         let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId;
-        return axios.put(url, { task: body}, options);
+        // element can be target, layer, transforms...
+        if (element) {
+            url += "/" + element;
+        }
+        return axios.put(url, body, options);
     },
     loadTask: function( geoserverBaseUrl, importId, taskId, options) {
         let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId;
         return axios.get(url, options);
+    },
+    runImport: function( geoserverBaseUrl, importId, options) {
+        let url = geoserverBaseUrl + "imports/" + importId;
+        return axios.post(url, null, options);
     },
     deleteImport: function(geoserverBaseUrl, importId, options) {
         let url = geoserverBaseUrl + "imports/" + importId;
@@ -41,6 +49,22 @@ var Api = {
     },
     deleteTask: function(geoserverBaseUrl, importId, taskId, options) {
         let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId;
+        return axios.delete(url, options);
+    },
+    addTransform: function(geoserverBaseUrl, importId, taskId, transform, options) {
+        let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/transforms";
+        return axios.post(url, transform, options);
+    },
+    loadTransform: function(geoserverBaseUrl, importId, taskId, transformId, options) {
+        let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/transforms/" + transformId;
+        return axios.get(url, options);
+    },
+    updateTransform: function(geoserverBaseUrl, importId, taskId, transformId, transform, options) {
+        let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/transforms/" + transformId;
+        return axios.put(url, transform, options);
+    },
+    deleteTransform: function(geoserverBaseUrl, importId, taskId, transformId, options) {
+        let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/transforms/" + transformId;
         return axios.delete(url, options);
     }
 };
