@@ -6,39 +6,45 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Grid, Col, Row, Panel, Label} = require('react-bootstrap');
+const {Grid, Col, Row, Panel, Label, Button} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 const {DropdownList} = require('react-widgets');
 const {Message} = require('../../I18N/I18N');
+const ImporterUtils = require('../../../utils/ImporterUtils');
 const Layer = require('./Layer');
 const TransformsGrid = require('./TransformsGrid');
 
 const Task = React.createClass({
     propTypes: {
         task: React.PropTypes.object,
+        panStyle: React.PropTypes.object,
         updateTask: React.PropTypes.func,
+        deleteTask: React.PropTypes.func,
+        loadLayer: React.PropTypes.func,
+        updateLayer: React.PropTypes.func,
         loadTransform: React.PropTypes.func,
         deleteTransform: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             task: {},
+            panStyle: {
+                minHeight: "200px"
+            },
             updateTask: () => {},
+            deleteTask: () => {},
+            loadLayer: () => {},
+            updateLayer: () => {},
             loadTransform: () => {},
             deleteTransform: () => {}
+
         };
     },
+    componentDidMount() {
+        // setTimeout(() => {this.props.loadLayer(); }, 500);
+    },
     getbsStyleForState(state) {
-        switch (state) {
-            case "READY":
-                return "info";
-            case "NO_FORMAT":
-            case "BAD_FORMAT":
-                return "danger";
-            default:
-                return "default";
-
-        }
+        return ImporterUtils.getbsStyleForState(state);
     },
     renderLoading(element) {
         if (this.props.task.loading ) {
@@ -50,15 +56,17 @@ const Task = React.createClass({
         }
     },
     renderGeneral(task) {
-        return (<dl className="dl-horizontal">
+        return (<Panel style={this.props.panStyle} bsStyle="info" header={<span><Message msgId="importer.task.general" /></span>}>
+            <dl className="dl-horizontal">
               <dt><Message msgId="importer.task.status" /></dt>
               <dd><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label></dd>
               <dt><Message msgId="importer.task.updateMode" /></dt>
               <dd><DropdownList data={["APPEND", "CREATE", "REPLACE"]} value={task.updateMode} onChange={this.updateMode}/></dd>
-            </dl>);
+            </dl>
+        </Panel>);
     },
     renderDataPanel(data) {
-        return (<Panel bsStyle="info" header={<span><Message msgId="importer.task.originalData" /></span>}>
+        return (<Panel style={this.props.panStyle} bsStyle="info" header={<span><Message msgId="importer.task.originalData" /></span>}>
             <dl className="dl-horizontal">
               <dt><Message msgId="importer.task.file" /></dt>
               <dd>{data.file}</dd>
@@ -68,7 +76,10 @@ const Task = React.createClass({
         </Panel>);
     },
     renderTargetPanel(target) {
-        return (<Panel bsStyle="info" header={<span><Message msgId="importer.task.targetStore" />{this.renderLoading("target")}</span>}>
+        if (!target) {
+            return null;
+        }
+        return (<Panel style={this.props.panStyle} bsStyle="info" header={<span><Message msgId="importer.task.targetStore" />{this.renderLoading("target")}</span>}>
             <dl className="dl-horizontal">
               <dt><Message msgId="importer.task.storeType" /></dt>
               <dd>{target.dataStore && target.dataStore.type || target.coverageStore && target.coverageStore.type}</dd>
@@ -82,9 +93,9 @@ const Task = React.createClass({
             <Panel header={<Message msgId="importer.task.panelTitle" msgParams={{id: this.props.task.id}} />} >
             <Grid fluid>
                 <Row>
-                    {this.renderGeneral(this.props.task)}
-                </Row>
-                <Row >
+                    <Col lg={4} md={6} xs={12}>
+                        {this.renderGeneral(this.props.task)}
+                    </Col>
                     <Col lg={4} md={6} xs={12}>
                         {this.renderDataPanel(this.props.task.data)}
                     </Col>
@@ -92,13 +103,17 @@ const Task = React.createClass({
                         {this.renderTargetPanel(this.props.task.target)}
                     </Col>
                     <Col lg={4} md={6} xs={12}>
-                        <Layer panProps={{bsStyle: "info" }} layer={this.props.task.layer}/>
+                        <Layer panProps={{
+                            bsStyle: "info",
+                            header: <span><Message msgId="importer.task.layer" />{this.renderLoading("layer")}</span>,
+                            style: this.props.panStyle
+                        }}
+                            layer={this.props.task.layer}
+                            updateLayer={this.props.updateLayer}/>
                     </Col>
-                </Row>
-                <Row>
-                    <Col md={12}>
+                    <Col lg={8} md={12}>
                         <TransformsGrid
-                            panProps={{bsStyle: "info" }}
+                            panProps={{bsStyle: "info", style: this.props.panStyle }}
                             transforms={this.props.task.transformChain && this.props.task.transformChain.transforms}
                             loadTransform={this.props.loadTransform}
                             deleteTransform={this.props.deleteTransform}
@@ -106,12 +121,15 @@ const Task = React.createClass({
                              />
                     </Col>
                 </Row>
+                <Row style={{"float": "right"}}>
+                    <Button bsStyle="danger" onClick={() => {this.props.deleteTask(this.props.task.id); }}><Message msgId="importer.task.delete" /></Button>
+                </Row>
             </Grid>
             </Panel>
         );
     },
     updateMode(value) {
-        this.props.updateTask( null, null, {
+        this.props.updateTask({
             "updateMode": value
         });
     }

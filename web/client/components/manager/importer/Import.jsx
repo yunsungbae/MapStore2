@@ -8,6 +8,7 @@
 const React = require('react');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
+const ImporterUtils = require('../../../utils/ImporterUtils');
 const {Grid, Row, Panel, Label, Table, Button, Glyphicon} = require('react-bootstrap');
 
 const Task = React.createClass({
@@ -28,19 +29,7 @@ const Task = React.createClass({
         };
     },
     getbsStyleForState(state) {
-        switch (state) {
-            case "NO_FORMAT":
-            case "BAD_FORMAT":
-                return "danger";
-            case "READY":
-            case "PENDING":
-                return "info";
-            case "COMPLETE":
-                return "success";
-            default:
-                return "default";
-
-        }
+        return ImporterUtils.getbsStyleForState(state);
     },
     renderGeneral(importObj) {
         return (<dl className="dl-horizontal">
@@ -74,6 +63,8 @@ const Task = React.createClass({
                 return <Message msgId="importer.import.applyingPreset"/>;
             case "deleting":
                 return <Message msgId="importer.import.deleting" />;
+            case "analyzing":
+                return <Message msgId="importer.import.analyzing" />;
             default:
                 return null;
         }

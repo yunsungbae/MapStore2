@@ -15,9 +15,12 @@ const IMPORT_CREATED = 'IMPORT_CREATED';
 const IMPORTS_TASK_CREATED = 'IMPORTS_TASK_CREATED';
 const IMPORTS_TASK_LOADED = 'IMPORTS_TASK_LOADED';
 const IMPORTS_TASK_LOAD_ERROR = 'IMPORTS_TASK_LOAD_ERROR';
-const IMPORTS_TASK_UPDATED = 'IMPORT_TASK_UPDATED';
-const IMPORTS_TASK_DELETE = 'IMPORT_TASK_DELETE';
+const IMPORTS_TASK_UPDATED = 'IMPORTS_TASK_UPDATED';
+const IMPORTS_TASK_DELETE = 'IMPORTS_TASK_DELETE';
 const IMPORTS_TASK_CREATION_ERROR = 'IMPORTS_TASK_CREATION_ERROR';
+
+const LAYER_LOADED = 'LAYER_LOADED';
+const LAYER_UPDATED = 'LAYER_UPDATED';
 
 const IMPORTS_TRANSFORM_LOAD = 'IMPORTS_TRANSFORM_LOAD';
 const IMPORTS_TRANSFORM_LOAD_ERROR = 'IMPORTS_TRANSFORM_LOAD_ERROR';
@@ -84,9 +87,10 @@ const matchPreset = function(preset, task) {
 /* ACTION CREATORS */
 /*******************/
 
-function loading(details) {
+function loading(details, isLoading = true) {
     return {
         type: IMPORTS_LOADING,
+        loading: isLoading,
         details: details
     };
 }
@@ -117,6 +121,7 @@ function importTaskCreated(tasks) {
         tasks: tasks
     };
 }
+
 function importTaskUpdated(task, importId, taskId) {
     return {
         type: IMPORTS_TASK_UPDATED,
@@ -202,6 +207,24 @@ function importTaskCreationError(e) {
         error: e
     };
 }
+
+function layerLoaded(importId, taskId, layer) {
+    return {
+        type: LAYER_LOADED,
+        importId,
+        taskId,
+        layer
+    };
+}
+
+function layerUpdated(importId, taskId, layer) {
+    return {
+        type: LAYER_LOADED,
+        importId,
+        taskId,
+        layer
+    };
+}
 /** TRANSFORMS **/
 function transformLoaded(importId, taskId, transformId, transform) {
     return {
@@ -263,8 +286,10 @@ function createImport(geoserverRestURL, body = {}) {
         let authOpts = getAuthOptionsFromState(getState && getState());
         API.createImport(geoserverRestURL, body, authOpts).then((response) => {
             dispatch(importCreated(response && response.data && response.data.import));
+            dispatch(loading(null, false));
         }).catch((e) => {
             dispatch(importCretationError(e));
+            dispatch(loading(null, false));
         });
     };
 }
@@ -274,8 +299,10 @@ function loadImports(geoserverRestURL) {
         let authOpts = getAuthOptionsFromState(getState && getState());
         API.getImports(geoserverRestURL, authOpts).then((response) => {
             dispatch(importsLoaded(response && response.data && response.data.imports));
+            dispatch(loading(null, false));
         }).catch((e) => {
             dispatch(loadError(e));
+            dispatch(loading(null, false));
         });
     };
 }
@@ -286,8 +313,10 @@ function loadImport(geoserverRestURL, importId) {
         let authOpts = getAuthOptionsFromState(getState && getState());
         API.loadImport(geoserverRestURL, importId, authOpts).then((response) => {
             dispatch(importLoaded(response && response.data && response.data.import));
+            dispatch(loading({importId: importId}, false));
         }).catch((e) => {
             dispatch(importLoadError(e));
+            dispatch(loading({importId: importId}, false));
         });
     };
 }
@@ -297,8 +326,10 @@ function deleteImport(geoserverRestURL, importId) {
         let authOpts = getAuthOptionsFromState(getState && getState());
         API.deleteImport(geoserverRestURL, importId, authOpts).then(() => {
             dispatch(importDeleted(importId));
+            dispatch(loading({importId: importId, message: "deleting"}, false));
         }).catch((e) => {
             dispatch(importDeleteError(e));
+            dispatch(loading({importId: importId, message: "deleting"}, false));
         });
     };
 }
@@ -311,13 +342,36 @@ function runImport(geoserverRestURL, importId) {
             dispatch(importRunSuccess(importId));
             if (getState && getState().selectedImport && getState().selectedImport.id === importId) {
                 loadImport(geoserverRestURL, importId);
+                dispatch(loading({importId}, false));
             } else {
                 loadImports(geoserverRestURL);
+                dispatch(loading({importId}, false));
             }
         }).catch((e) => {importRunError(importId, e); });
     };
 }
+/** LAYER **/
 
+function loadLayer(geoserverRestURL, importId, taskId) {
+    return (dispatch, getState) => {
+        dispatch(loading({importId: importId, taskId: taskId, element: "layer", message: "loadinglayer"}));
+        let authOpts = getAuthOptionsFromState(getState && getState());
+        return API.loadLayer(geoserverRestURL, importId, taskId, authOpts).then((response) => {
+            dispatch(layerLoaded(importId, taskId, response && response.data && response.data.layer));
+            dispatch(loading({importId: importId, taskId: taskId, element: "layer", message: "loadinglayer"}, false));
+        });
+    };
+}
+function updateLayer(geoserverRestURL, importId, taskId, layer) {
+    return (dispatch, getState) => {
+        dispatch(loading({importId: importId, taskId: taskId, element: "layer", message: "loadinglayer"}));
+        let authOpts = getAuthOptionsFromState(getState && getState());
+        return API.updateLayer(geoserverRestURL, importId, taskId, layer, authOpts).then((response) => {
+            dispatch(layerUpdated(importId, taskId, response && response.data && response.data.layer));
+            dispatch(loading({importId: importId, taskId: taskId, element: "layer", message: "loadinglayer"}, false));
+        });
+    };
+}
 /** TASKS **/
 function loadTask(geoserverRestURL, importId, taskId) {
     return (dispatch, getState) => {
@@ -325,36 +379,59 @@ function loadTask(geoserverRestURL, importId, taskId) {
         let authOpts = getAuthOptionsFromState(getState && getState());
         API.loadTask(geoserverRestURL, importId, taskId, authOpts).then((response) => {
             dispatch(importTaskLoaded(response && response.data && response.data.task));
+            dispatch(loadLayer(geoserverRestURL, importId, taskId));
+            dispatch(loading({importId: importId, taskId: taskId}, false));
         }).catch((e) => {
             dispatch(importTaskLoadError(e));
+            dispatch(loading({importId: importId, taskId: taskId}, false));
         });
     };
 }
-function updateTask(geoserverRestURL, importId, taskId, body, element) {
+function updateUI(geoserverRestURL, importId, taskId) {
+    return (dispatch, getState) => {
+        let state = getState && getState() && getState().importer;
+        if (state && state.selectedImport && state.selectedImport.id === importId && state.selectedTask && state.selectedTask.id === taskId) {
+            dispatch(loadTask(geoserverRestURL, importId, taskId));
+            dispatch(loading({importId, taskId}, false));
+        } else if (state && state.selectedImport && state.selectedImport.id === importId) {
+            dispatch(loadImport(geoserverRestURL, importId));
+            dispatch(loading({importId}, false));
+        }else {
+            dispatch(loadImports(geoserverRestURL));
+            dispatch(loading({importId}, false));
+        }
+    };
+}
+function updateTask(geoserverRestURL, importId, taskId, body, element, message = "updating") {
     return (dispatch, getState) => {
         let authOpts = getAuthOptionsFromState(getState && getState());
+        if (authOpts && authOpts.headers ) {
+            // this check don't support encoding indication
+            authOpts.headers['Content-Type'] = 'application/json';
+        } else {
+            authOpts.headers = {'Content-Type': 'application/json'};
+        }
+        dispatch(loading({importId: importId, taskId: taskId, message}));
         return API.updateTask(geoserverRestURL, importId, taskId, element, body, authOpts).then((response) => {
             dispatch(importTaskUpdated(response && response.data && response.data.task, importId, taskId));
-            let {selectedImport, selectedTask} = getState && getState().importer;
-            if (selectedImport && selectedTask ) {
-                dispatch(loadTask(geoserverRestURL, selectedImport.id, selectedTask.id));
-            } else if ( selectedImport) {
-                dispatch(loadImport(geoserverRestURL, selectedImport.id));
-            } else {
-                dispatch(loadImports(geoserverRestURL));
-            }
+            dispatch(loading({importId: importId, taskId: taskId}, false));
+            dispatch(updateUI(geoserverRestURL, importId, taskId));
         });
     };
 }
+
 function deleteTask(geoserverRestURL, importId, taskId) {
     return (dispatch, getState) => {
         dispatch(loading({importId: importId, taskId: taskId, message: "deleting"}));
         let authOpts = getAuthOptionsFromState(getState && getState());
         return API.deleteTask(geoserverRestURL, importId, taskId, authOpts).then(() => {
             dispatch(importTaskDeleted(importId, taskId));
+            dispatch(loading({importId: importId, taskId: taskId, message: "deleting"}, false));
+            dispatch(loading({importId: importId, message: "deleting"}, false));
         });
     };
 }
+
 /** TRANFORMS **/
 function loadTransform(geoserverRestURL, importId, taskId, transformId) {
     return (dispatch, getState) => {
@@ -363,6 +440,7 @@ function loadTransform(geoserverRestURL, importId, taskId, transformId) {
         return API.loadTransform(geoserverRestURL, importId, taskId, transformId, authOpts).then((response) => {
             let transform = response && response.data;
             dispatch(transformLoaded(importId, taskId, transformId, transform));
+            dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}, false));
         }).catch((e) => {transformLoadError(importId, taskId, transformId, e); });
     };
 }
@@ -372,9 +450,11 @@ function deleteTransform(geoserverRestURL, importId, taskId, transformId) {
         let authOpts = getAuthOptionsFromState(getState && getState());
         return API.deleteTransform(geoserverRestURL, importId, taskId, transformId, authOpts).then(() => {
             dispatch(transformDeleted(importId, taskId, transformId));
+            dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}, false));
             let state = getState().importer;
             if (state.selectedTask && state.selectedTask.id === taskId) {
                 dispatch(loadTask(geoserverRestURL, importId, taskId));
+                dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}, false));
             }
         }).catch((e) => {transformLoadError(importId, taskId, transformId, e); }); // TODO transform delete error
     };
@@ -386,7 +466,11 @@ function updateTransform(geoserverRestURL, importId, taskId, transformId, transf
         let authOpts = getAuthOptionsFromState(getState && getState());
         return API.updateTransform(geoserverRestURL, importId, taskId, transformId, transform, authOpts).then((response) => {
             dispatch(transformUpdated(importId, taskId, transformId, response && response.data));
-        }).catch((e) => {transformLoadError(importId, taskId, transformId, e); }); // TODO transform update error
+            dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}, false));
+        }).catch((e) => {
+            transformLoadError(importId, taskId, transformId, e); // TODO transform update error
+            dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}, false));
+        });
     };
 }
 /** PRESETS **/
@@ -394,13 +478,12 @@ function applyPreset(geoserverRestURL, importId, task, preset) {
 
     return (dispatch, getState) => {
         const applyChange = (element, change) => { // TODO better as an action
-            dispatch(updateTask(geoserverRestURL, importId, task.id, change, element));
+            dispatch(updateTask(geoserverRestURL, importId, task.id, change, element, "applyPresets"));
         };
         if (preset.changes) {
             // update target, layer
             Object.keys(preset.changes).forEach((element) => {
                 let values = preset.changes[element];
-                dispatch(loading({importId: importId, taskId: task.id, element, message: "applyPreset"}));
                 if (Array.isArray(values)) {
                     values.forEach(applyChange.bind(null, element));
                 } else {
@@ -410,8 +493,11 @@ function applyPreset(geoserverRestURL, importId, task, preset) {
         }
         if (preset.transforms) {
             preset.transforms.forEach( (transform) => {
+                dispatch(loading({importId: importId, taskId: task.id, message: "applyPresets"}));
                 let authOpts = getAuthOptionsFromState(getState && getState());
-                API.addTransform(geoserverRestURL, importId, task.id, transform, authOpts);
+                API.addTransform(geoserverRestURL, importId, task.id, transform, authOpts).then(() => {
+                    dispatch(loading({importId: importId, taskId: task.id, message: "applyPresets"}, false));
+                });
             });
         }
     };
@@ -427,7 +513,9 @@ function applyPresets(geoserverRestURL, importId, tasks, presets) {
                         }
                     } else {
                         let authOpts = getAuthOptionsFromState(getState && getState());
+                        dispatch(loading({importId: importId, taskId: task.id, message: "analyzing"}));
                         API.loadTask(geoserverRestURL, importId, task.id, authOpts).then((response) => {
+                            dispatch(loading({importId: importId, taskId: task.id}, false));
                             let completeTask = response && response.data && response.data.task;
                             if (matchPreset(preset, completeTask)) {
                                 dispatch(applyPreset(geoserverRestURL, importId, completeTask, preset));
@@ -474,6 +562,7 @@ module.exports = {
     loadImports, createImport, uploadImportFiles,
     loadImport, runImport, deleteImport,
     updateTask, deleteTask, loadTask,
+    loadLayer, updateLayer,
     loadTransform, updateTransform, deleteTransform,
     IMPORTS_LOADING,
     IMPORTS_LIST_LOADED,
@@ -487,6 +576,8 @@ module.exports = {
     IMPORTS_TASK_CREATION_ERROR,
     IMPORTS_TASK_LOADED,
     IMPORTS_TASK_UPDATED,
+    LAYER_LOADED,
+    LAYER_UPDATED,
     IMPORTS_TRANSFORM_LOAD,
     IMPORTS_TRANSFORM_UPDATED,
     IMPORTS_TRANSFORM_DELETE,

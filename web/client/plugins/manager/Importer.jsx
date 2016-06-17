@@ -15,12 +15,13 @@ const {
     loadImports,
     createImport, loadImport, runImport, deleteImport,
     uploadImportFiles, loadTask, updateTask, deleteTask,
+    loadLayer, updateLayer,
     loadTransform, deleteTransform
 } = require('../../actions/importer');
 
 const assign = require('object-assign');
 const getURL = function(props) {
-    return props.geoserverRestURL || "http://reports.comunege.geo-solutions.it/geoserver/rest/";
+    return props.geoserverRestURL || "/geoserver/rest/";
 };
 
 const ImporterPlugin = connect(
@@ -54,7 +55,9 @@ const ImporterPlugin = connect(
             loadTransform: loadTransform.bind(null, getURL(ownProps)),
             deleteTransform: deleteTransform.bind(null, getURL(ownProps)),
             deleteImport: deleteImport.bind(null, getURL(ownProps)),
-            deleteTask: deleteTask.bind(null, getURL(ownProps))
+            deleteTask: deleteTask.bind(null, getURL(ownProps)),
+            loadLayer: loadLayer.bind(null, getURL(ownProps)),
+            updateLayer: updateLayer.bind(null, getURL(ownProps))
         }, dispatch));
     }
 )(require("../../components/manager/importer/Importer"));

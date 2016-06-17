@@ -6,26 +6,66 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Panel} = require('react-bootstrap');
+const {Panel, Button} = require('react-bootstrap');
+const Message = require("../../I18N/Message");
 
 
 const Layer = React.createClass({
     propTypes: {
         layer: React.PropTypes.object,
-        panProps: React.PropTypes.object
+        loading: React.PropTypes.bool,
+        panProps: React.PropTypes.object,
+        updateLayer: React.PropTypes.func
     },
     getDefaultProps() {
         return {
-            layer: {}
+            layer: {},
+            loading: false,
+            updateLayer: () => {}
         };
     },
+    getInitialState() {
+        return {};
+    },
+    onChange(event) {
+        let state = {};
+        state[event.target.name] = event.target.value || "";
+        this.setState(state);
+    },
+    renderInput(name) {
+        return [ <dt key={"title-" + name}>{name}</dt>,
+         (<dd>
+             <input
+                 name={name}
+                 key={name}
+                 type="text"
+                 onChange={this.onChange}
+                 value={this.state[name] !== undefined ? this.state[name] : this.props.layer[name]}
+                 />
+        </dd>)];
+    },
     render() {
-        return (<Panel {...this.props.panProps} header={<span>Layer</span>}>
+        return (<Panel {...this.props.panProps}>
             <dl className="dl-horizontal">
-              <dt>name</dt>
-              <dd>{this.props.layer.name}</dd>
+                {["name", "title", "description"].map(this.renderInput)}
             </dl>
+            <div style={{"float": "right"}}>
+                <Button bsStyle="primary" disabled={!this.isUpdateEnabled()} onClick={() => {this.props.updateLayer(this.state); }}>
+                    <Message msgId="importer.task.update" /></Button>
+            </div>
         </Panel>);
+    },
+    isValid() {
+        return this.state.name !== "";
+    },
+    isModified() {
+        return Object.keys(this.state).some((element) => {
+            return this.state[element] !== this.props.layer[element];
+
+        });
+    },
+    isUpdateEnabled() {
+        return this.isModified() && this.isValid() && !this.props.loading;
     }
 });
 module.exports = Layer;

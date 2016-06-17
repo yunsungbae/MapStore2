@@ -39,8 +39,16 @@ var Api = {
         let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId;
         return axios.get(url, options);
     },
+    loadLayer: function( geoserverBaseUrl, importId, taskId, options) {
+        let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/layer";
+        return axios.get(url, options);
+    },
+    updateLayer: function( geoserverBaseUrl, importId, taskId, layer, options) {
+        let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/layer";
+        return axios.put(url, layer, options);
+    },
     runImport: function( geoserverBaseUrl, importId, options) {
-        let url = geoserverBaseUrl + "imports/" + importId;
+        let url = geoserverBaseUrl + "imports/" + importId + "?async=true";
         return axios.post(url, null, options);
     },
     deleteImport: function(geoserverBaseUrl, importId, options) {

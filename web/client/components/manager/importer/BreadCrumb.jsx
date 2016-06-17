@@ -34,7 +34,7 @@ const BreadCrumb = React.createClass({
                   <Message msgId="importer.importN" msgParams={{id: this.props.selectedImport.id}}/>
               </a></li>
               <li><a href="#" onClick={(e) => {e.preventDefault(); this.props.loadTask(this.props.selectedImport.id, this.props.selectedTask.id); }}>
-                  Task {this.props.selectedTask.id}
+                  Package {this.props.selectedTask.id}
               </a></li>
           <li className="active">Transform {this.props.selectedTransform.id}</li>
             </ol>);
@@ -46,7 +46,7 @@ const BreadCrumb = React.createClass({
               <li><a href="#" onClick={(e) => {e.preventDefault(); this.props.loadImport(this.props.selectedImport.id); }}>
                   <Message msgId="importer.importN" msgParams={{id: this.props.selectedImport.id}}/>
               </a></li>
-              <li className="active">Task {this.props.selectedTask.id}</li>
+              <li className="active">Package {this.props.selectedTask.id}</li>
             </ol>);
         }
         if (this.props.selectedImport) {

@@ -27,14 +27,16 @@ const Importer = React.createClass({
         uploading: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.object]),
         createImport: React.PropTypes.func,
         runImport: React.PropTypes.func,
-        updateTask: React.PropTypes.func,
-        loadImport: React.PropTypes.func,
         deleteImport: React.PropTypes.func,
+        updateTask: React.PropTypes.func,
         deleteTask: React.PropTypes.func,
+        loadImport: React.PropTypes.func,
         loadTask: React.PropTypes.func,
+        loadLayer: React.PropTypes.func,
+        updateLayer: React.PropTypes.func,
         loadTransform: React.PropTypes.func,
-        deleteTransform: React.PropTypes.func,
         updateTranform: React.PropTypes.func,
+        deleteTransform: React.PropTypes.func,
         uploadImportFiles: React.PropTypes.func,
         selectedImport: React.PropTypes.object,
         selectedTask: React.PropTypes.object,
@@ -47,6 +49,7 @@ const Importer = React.createClass({
             createImport: () => {},
             loadImport: () => {},
             loadTask: () => {},
+            loadLayer: () => {},
             loadTransform: () => {},
             deleteTransform: () => {},
             uploadImportFiles: () => {},
@@ -103,12 +106,14 @@ const Importer = React.createClass({
         if ( this.props.selectedImport && this.props.selectedTask) {
             return (<div>
             {breadcrumb}
-            <h2>Import {this.props.selectedImport.id}</h2>
             <Task
                 task={this.props.selectedTask}
                 updateTask={this.props.updateTask.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                deleteTask={this.props.deleteTask.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
                 deleteTransform={this.props.deleteTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
                 loadTransform={this.props.loadTransform.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                loadLayer={this.props.loadLayer.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
+                updateLayer={this.props.updateLayer.bind(null, this.props.selectedImport.id, this.props.selectedTask.id)}
                 />
             </div>);
         }
