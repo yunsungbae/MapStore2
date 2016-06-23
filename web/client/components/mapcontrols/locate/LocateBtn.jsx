@@ -20,14 +20,18 @@ var LocateBtn = React.createClass({
         onClick: React.PropTypes.func,
         tooltip: React.PropTypes.element,
         tooltipPlace: React.PropTypes.string,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        bsStyle: React.PropTypes.string,
+        glyph: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             id: "locate-btn",
             onClick: () => {},
             locate: "DISABLED",
-            tooltipPlace: "left"
+            tooltipPlace: "left",
+            bsStyle: "default",
+            glyph: "screenshot"
         };
     },
     onClick() {
@@ -60,7 +64,7 @@ var LocateBtn = React.createClass({
         const geoLocationDisabled = this.props.locate === "PERMISSION_DENIED";
         return (
             <Button id={this.props.id} disabled={geoLocationDisabled} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.getBtnStyle()} style={this.props.style}>
-                <Glyphicon glyph="screenshot"/>{this.props.text}{this.props.help}
+                <Glyphicon glyph={this.props.glyph}/>{this.props.text}{this.props.help}
             </Button>
         );
     },
@@ -108,9 +112,9 @@ var LocateBtn = React.createClass({
 
     },
     getBtnStyle() {
-        let style = "default";
+        let style = this.props.bsStyle;
         if (this.props.locate === "FOLLOWING") {
-            style = "primary";
+            style = "success";
         }else if (this.props.locate === "ENABLED") {
             style = "info";
         }

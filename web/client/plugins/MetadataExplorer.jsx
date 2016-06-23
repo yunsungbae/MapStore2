@@ -12,11 +12,12 @@ const assign = require('object-assign');
 const {cswToCatalogSelector} = require("../selectors/cswtocatalog");
 // const {createDefaultMemorizeSelector} = require("../selectors/common");
 const {createSelector} = require("reselect");
-const {Glyphicon, Input, Alert, Pagination} = require('react-bootstrap');
+const {Glyphicon, Input, Alert, Pagination, Panel} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 const {textSearch} = require("../actions/catalog");
 const {addLayer} = require("../actions/layers");
 const {zoomToExtent} = require("../actions/map");
+const {toggleControl} = require("../actions/controls");
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
 const makeCatalogSelector = () => {
@@ -38,9 +39,11 @@ const RecordGrid = connect(makeMapStateToProps, {
     onZoomToExtent: zoomToExtent
 })(require("../components/catalog/RecordGrid"));
 
+const Dialog = require('../components/misc/Dialog');
 
 const MetadataExplorerComponent = React.createClass({
     propTypes: {
+        id: React.PropTypes.string,
         onSearch: React.PropTypes.func,
         onLayerAdd: React.PropTypes.func,
         pageSize: React.PropTypes.number,
@@ -50,15 +53,38 @@ const MetadataExplorerComponent = React.createClass({
         result: React.PropTypes.object,
         loadingError: React.PropTypes.object,
         searchOptions: React.PropTypes.object,
-        chooseCatalogUrl: React.PropTypes.bool
+        chooseCatalogUrl: React.PropTypes.bool,
+        wrap: React.PropTypes.bool,
+        wrapWithPanel: React.PropTypes.bool,
+        panelStyle: React.PropTypes.object,
+        panelClassName: React.PropTypes.string,
+        toggleControl: React.PropTypes.func,
+        closeGlyph: React.PropTypes.string,
+        buttonStyle: React.PropTypes.string,
+        style: React.PropTypes.object
     },
     getDefaultProps() {
         return {
+            id: "mapstore-metadata-explorer",
             active: false,
             pageSize: 6,
             onSearch: () => {},
             onLayerAdd: () => {},
-            chooseCatalogUrl: true
+            chooseCatalogUrl: true,
+            wrap: false,
+            wrapWithPanel: true,
+            panelStyle: {
+                minWidth: "300px",
+                zIndex: 100,
+                position: "absolute",
+                overflow: "auto",
+                top: "100px",
+                right: "100px"
+            },
+            panelClassName: "toolbar-panel",
+            toggleControl: () => {},
+            closeGlyph: "",
+            buttonStyle: "default"
         };
     },
     getInitialState() {
@@ -103,8 +129,7 @@ const MetadataExplorerComponent = React.createClass({
           </Alert>);
     },
     renderLoading() {
-        return (<div><Spinner spinnerName="circle"/></div>);
-
+        return (<Spinner spinnerName="circle" noFadeIn/>);
     },
     renderPagination() {
         let total = this.props.result.numberOfRecordsMatched;
@@ -123,6 +148,7 @@ const MetadataExplorerComponent = React.createClass({
           onSelect={this.handlePage} />
         <div className="push-right">
             <Message msgId="catalog.pageInfo" msgParams={{start, end: start + returned - 1, total}} />
+            {this.state.loading ? this.renderLoading() : null}
         </div>
   </div>);
     },
@@ -145,8 +171,8 @@ const MetadataExplorerComponent = React.createClass({
         }
     },
     render() {
-        return (
-             <div>
+        const panel = (
+             <div role="body">
                  <div>
                      {this.renderURLInput()}
                      <Input
@@ -159,10 +185,25 @@ const MetadataExplorerComponent = React.createClass({
                          onKeyDown={this.onKeyDown}/>
                  </div>
                  <div>
-                    {this.state.loading ? this.renderLoading() : this.renderResult()}
+                    {this.renderResult()}
                  </div>
              </div>
         );
+        if (this.props.wrap) {
+            if (this.props.active) {
+                if (this.props.wrapWithPanel) {
+                    return (<Panel id={this.props.id} header={<span><span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><span className="shapefile-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                        {panel}
+                    </Panel>);
+                }
+                return (<Dialog id="mapstore-catalog-panel" style={this.props.style}>
+                    <span role="header"><span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+                    {panel}
+                </Dialog>);
+            }
+            return null;
+        }
+        return panel;
     },
     setCatalogUrl(e) {
         this.setState({catalogURL: e.target.value});
@@ -181,10 +222,11 @@ const MetadataExplorerPlugin = connect((state) => ({
     searchOptions: state.catalog && state.catalog.searchOptions,
     result: state.catalog && state.catalog.result,
     loadingError: state.catalog && state.catalog.loadingError,
-    active: state.controls && state.controls.toolbar && state.controls.toolbar.active === "metadataexplorer"
+    active: state.controls && state.controls.toolbar && state.controls.toolbar.active === "metadataexplorer" || state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
 }), {
     onSearch: textSearch,
-    onLayerAdd: addLayer
+    onLayerAdd: addLayer,
+    toggleControl: toggleControl.bind(null, 'metadataexplorer', null)
 })(MetadataExplorerComponent);
 
 module.exports = {
@@ -200,6 +242,13 @@ module.exports = {
             help: <Message msgId="helptexts.metadataExplorer"/>,
             icon: <Glyphicon glyph="folder-open" />,
             hide: true
+        },
+        BurgerMenu: {
+            name: 'metadataexplorer',
+            position: 5,
+            text: <Message msgId="catalog.title"/>,
+            icon: <Glyphicon glyph="folder-open"/>,
+            action: toggleControl.bind(null, 'metadataexplorer', null)
         }
     }),
     reducers: {catalog: require('../reducers/catalog')}

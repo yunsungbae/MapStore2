@@ -13,6 +13,9 @@ const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
 
+
+require("./mouseposition/mousePosition.css");
+
 const {changeMousePositionCrs, changeMousePositionState} = require('../actions/mousePosition');
 
 const getDesiredPosition = (map, mousePosition, mapInfo) => {
@@ -54,7 +57,12 @@ const CRSSelector = connect((state) => ({
 
 const MousePositionButton = connect((state) => ({
     pressed: state.mousePosition && state.mousePosition.enabled,
-    btnConfig: {disabled: (!state.browser.touch) ? false : true}
+    active: state.mousePosition && state.mousePosition.enabled,
+    pressedStyle: "default",
+    defaultStyle: "primary",
+    btnConfig: {
+        bsSize: "small",
+        disabled: (!state.browser.touch) ? false : true}
 }), {
     onClick: changeMousePositionState
 })(require('../components/buttons/ToggleButton'));
@@ -64,18 +72,20 @@ const MousePositionPlugin = connect(selector)(require('../components/mapcontrols
 module.exports = {
     MousePositionPlugin: assign(MousePositionPlugin, {
         Settings: {
-            tool: <CRSSelector
+            tool: <div id="mapstore-mousepositionsettings" key="mousepositionsettings">
+            <CRSSelector
                 key="crsSelector"
                 enabled={true}
                 inputProps={{
-                    label: <Message msgId="mousePositionCoordinates" />,
-                    buttonBefore: <MousePositionButton
-                        isButton={true}
-                        text={<Message msgId="enable" />}
-                        glyphicon="eye-open"
-                    />
+                    label: <Message msgId="mousePositionCoordinates" />
                 }}
-                />,
+            />
+            <MousePositionButton
+                key="mousepositionbutton"
+                isButton={true}
+                text={<Message msgId="showMousePositionCoordinates" />}
+            />
+            </div>,
             position: 2
         }
     }),

@@ -45,7 +45,7 @@ const LeafletLayer = React.createClass({
     },
     componentWillUnmount() {
         if (this.layer && this.props.map) {
-            this.props.map.removeLayer(this.layer);
+            this.removeLayer();
         }
     },
     render() {
@@ -77,7 +77,7 @@ const LeafletLayer = React.createClass({
     },
     setLayerOpacity(opacity) {
         var oldOpacity = (this.props.options && this.props.options.opacity !== undefined) ? this.props.options.opacity : 1.0;
-        if (opacity !== oldOpacity && this.layer) {
+        if (opacity !== oldOpacity && this.layer && this.layer.setOpacity) {
             this.layer.setOpacity(opacity);
         }
     },
@@ -89,7 +89,12 @@ const LeafletLayer = React.createClass({
     },
     createLayer(type, options, position) {
         if (type) {
-            const opts = assign({}, options, position ? {zIndex: position} : null, {zoomOffset: -this.props.zoomOffset});
+            const opts = assign({}, options, position ? {zIndex: position} : null, {
+                zoomOffset: -this.props.zoomOffset,
+                onError: () => {
+                    this.props.onInvalid(this.props.type, this.props.options);
+                }
+            });
             this.layer = Layers.createLayer(type, opts);
             if (this.layer) {
                 this.layer.layerName = options.name;

@@ -29,7 +29,11 @@ const {
     // OPEN_MENU,
     ZONE_CHANGE,
     ZONES_RESET,
-    ZONE_SEARCH_ERROR
+    ZONE_SEARCH_ERROR,
+    SIMPLE_FILTER_FIELD_UPDATE,
+    ADD_SIMPLE_FILTER_FIELD,
+    REMOVE_SIMPLE_FILTER_FIELD,
+    REMOVE_ALL_SIMPLE_FILTER_FIELDS
 } = require('../actions/queryform');
 
 const {
@@ -64,7 +68,8 @@ const initialState = {
         attribute: "the_geom",
         operation: "INTERSECTS",
         geometry: null
-    }
+    },
+    simpleFilterFields: []
 };
 
 function queryform(state = initialState, action) {
@@ -228,9 +233,9 @@ function queryform(state = initialState, action) {
                                 }
                             }
 
-                            geometry = {coordinates: f.geometry.coordinates, geometryName: geometryName};
+                            geometry = {coordinates: f.geometry.coordinates, geometryName: geometryName, geometryType: f.geometry.type};
                         } else {
-                            geometry = {coordinates: f.geometry.coordinates, geometryName: geometryName};
+                            geometry = {coordinates: f.geometry.coordinates, geometryName: geometryName, geometryType: f.geometry.type};
                         }
                     }
 
@@ -263,7 +268,8 @@ function queryform(state = initialState, action) {
                 zoneFields: zoneFields,
                 geometry: extent && geometry ? {
                     extent: extent,
-                    coordinates: geometry.coordinates[0]
+                    type: geometry.geometryType,
+                    coordinates: geometry.coordinates
                 } : null
             })});
         }
@@ -316,6 +322,28 @@ function queryform(state = initialState, action) {
                 }
                 return field;
             })})});
+        }
+        case SIMPLE_FILTER_FIELD_UPDATE: {
+            const newSimpleFilterFields = state.simpleFilterFields.reduce((pr, f) => {
+                if (f.fieldId === action.id) {
+                    pr.push({...f, ...action.properties});
+                }else {
+                    pr.push(f);
+                }
+                return pr;
+            }, []);
+            return {...state, simpleFilterFields: newSimpleFilterFields};
+        }
+        case ADD_SIMPLE_FILTER_FIELD: {
+            const field = ( action.properties.fieldId) ? action.properties : {...action.properties, fieldId: new Date().getUTCMilliseconds()};
+            const newSimpleFilterFields = (state.simpleFilterFields) ? [...state.simpleFilterFields, field] : [field];
+            return {...state, simpleFilterFields: newSimpleFilterFields};
+        }
+        case REMOVE_SIMPLE_FILTER_FIELD: {
+            return {...state, simpleFilterFields: state.simpleFilterFields.filter((f) => { return f.fieldId !== action.id; })};
+        }
+        case REMOVE_ALL_SIMPLE_FILTER_FIELDS: {
+            return {...state, simpleFilterFields: []};
         }
         default:
             return state;

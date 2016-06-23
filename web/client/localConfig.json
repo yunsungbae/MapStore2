@@ -38,6 +38,7 @@
 		 }, {
 			  "name": "BackgroundSwitcher",
 				"cfg": {
+					"id": "mobile-background-switcher",
 					"fluid": true,
 		      "columnProperties": {
               "xs": 6,
@@ -78,37 +79,198 @@
 					"id": "locateMeButton"
 				}
 		 }],
-		"desktop": ["Map", "Help", "Identify", "MadeWithLove", {
+		"desktop": [{
+			"name": "Map",
+			"cfg": {
+				"toolsOptions": {
+					"scalebar": {
+						"leaflet": {
+							"position": "bottomright"
+						}
+					}
+				},
+        "zoomControl": false
+			}
+		}, {
+			"name": "Help",
+			"hideFrom": "Toolbar"
+		}, {
+        "name": "DrawerMenu",
+				"cfg": {
+					"glyph": "pencil",
+					"buttonStyle": "primary",
+					"singleSection": true
+				}
+    },
+    {
+       "name": "Identify",
+       "showIn": ["IdentifyBar", "Settings"],
+			 "cfg": {
+				 "enableRevGeocode": true,
+				 "viewerOptions": {
+					"container": "{context.ReactSwipe}",
+					"header": "{context.SwipeHeader}",
+					"headerOptions": {
+						"useButtons": true
+					},
+					"containerProps": {
+						"continuous": false
+					},
+					"collapsible": false
+				}
+			 }
+    },
+    "MadeWithLove",
+    {
 			  "name": "Locate",
-				"hide": true
+				"hide": true,
+				"override": {
+					"Toolbar": {
+						"alwaysVisible": true
+					}
+				}
 		}, {
 			  "name": "Home",
-				"hide": true
+				"hide": true,
+				"hideFrom": ["Toolbar"]
 		}, {
 				"name": "TOC",
+				"hideFrom": ["Toolbar"],
 				"hide": true
 		}, {
 				"name": "BackgroundSwitcher",
-				"hide": true
-		}, {
-				"name": "Measure",
-				"hide": true
-		}, {
-				"name": "Print",
-				"hide": true
-		}, {
-				"name": "ShapeFile",
-				"hide": true
-		}, {
-				"name": "Settings",
-				"hide": true
-		},{
-				"name": "MetadataExplorer",
+				"hideFrom": ["Toolbar"],
 				"hide": true,
 				"cfg": {
+					"fluid": true,
+		      "columnProperties": {
+              "xs": 12,
+              "sm": 12,
+              "md": 12
+          }
+				}
+		}, {
+				"name": "Measure",
+				"hide": true,
+        "showIn": ["DrawerMenu"],
+        "cfg":{
+          "showResults": false
+        }
+		}, {
+				"name": "MeasureResults"
+		}, {
+				"name": "Print",
+				"hideFrom": ["Toolbar"]
+		}, {
+				"name": "ShapeFile",
+				"hideFrom": ["Toolbar"],
+				"cfg": {
+					"wrap": true
+				}
+		}, {
+				"name": "Settings",
+				"hideFrom": ["Toolbar", "DrawerMenu"],
+				"cfg": {
+          "overrideSettings": {
+            "history": false
+          },
+					"wrap": true
+				}
+		}, {
+				"name": "MetadataExplorer",
+				"hideFrom": ["Toolbar"],
+				"cfg": {
+					"wrap": true,
 					"chooseCatalogUrl": false,
 					"initialCatalogURL": "http://demo.geo-solutions.it/geoserver/csw"
 				}
-		}, "About", "MousePosition", "Search", "Toolbar", "ScaleBox", "ZoomAll", "MapLoading", "Snapshot"]
+		}, {
+			"name": "About",
+			"hideFrom": ["DrawerMenu"]
+		}, "MousePosition", {
+				"name": "Search",
+				"cfg": {
+					"withToggle": ["max-width: 768px", "min-width: 768px"]
+				},
+				"hide": true
+		}, {
+      "name": "Toolbar",
+      "id": "NavigationBar",
+      "stateSelector": "toolbar",
+      "cfg": {
+        "id": "navigationBar"
+      }
+    }, {
+      "name": "Toolbar",
+      "id": "IdentifyBar",
+			"stateSelector": "identify",
+      "cfg": {
+        "id": "identifyBar"
+      },
+      "isDefault": false
+    },
+    "ScaleBox",
+    {
+      "name": "ZoomAll",
+      "hide": true
+    },
+    {
+			"name": "MapLoading",
+			"hide": true,
+			"override": {
+				"Toolbar": {
+					"alwaysVisible": true
+				}
+			}
+		},
+    {
+				"name": "Snapshot",
+				"hide": true,
+				"hideFrom": ["Toolbar"],
+				"cfg": {
+					"wrap": true
+				}
+		},
+    {
+      "name":"ZoomIn",
+      "hide": true,
+			"override": {
+				"Toolbar": {
+					"alwaysVisible": true
+				}
+			}
+    },
+    {
+      "name":"ZoomOut",
+      "hide": true,
+			"override": {
+				"Toolbar": {
+					"alwaysVisible": true
+				}
+			}
+    }, {
+			"name": "Login",
+			"hide": true,
+      "cfg": {
+          "nav": false,
+          "menuProps": {
+              "noCaret": true
+          }
+      }
+		},
+		"OmniBar",
+		{
+			"name": "BurgerMenu",
+			"hide": true
+		}, {
+			"name": "Expander",
+			"hide": true
+		}, {
+			"name": "Undo",
+			"hide": true
+		}, {
+			"name": "Redo",
+			"hide": true
+		}]
 	}
 }

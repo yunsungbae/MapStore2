@@ -2,7 +2,23 @@
     position: absolute;
     top: 5px;
     right: 5px;
-    marginRight: 5px;
-    marginTop: 5px;
-    zIndex: 1000;
+    z-index: 1000;
+}
+
+.toolbarexpand-enter {
+  opacity: 0.01;
+}
+
+.toolbarexpand-enter.toolbarexpand-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.toolbarexpand-leave {
+  opacity: 1;
+}
+
+.toolbarexpand-leave.toolbarexpand-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
 }

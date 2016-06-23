@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -7,10 +7,8 @@
  */
 
 var React = require('react');
-var BootstrapReact = require('react-bootstrap');
-var Button = BootstrapReact.Button;
-var Glyphicon = BootstrapReact.Glyphicon;
-var ImageButton = require('./ImageButton');
+
+const {Button, Glyphicon, Tooltip, OverlayTrigger} = require('react-bootstrap');
 
 const mapUtils = require('../../utils/MapUtils');
 const configUtils = require('../../utils/ConfigUtils');
@@ -28,55 +26,55 @@ const configUtils = require('../../utils/ConfigUtils');
 var ZoomToMaxExtentButton = React.createClass({
     propTypes: {
         id: React.PropTypes.string,
-        style: React.PropTypes.object,
         image: React.PropTypes.string,
         glyphicon: React.PropTypes.string,
         text: React.PropTypes.string,
-        btnSize: React.PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
+        btnSize: React.PropTypes.oneOf(['large', 'small', 'xsmall']),
         mapConfig: React.PropTypes.object,
         mapInitialConfig: React.PropTypes.object,
         changeMapView: React.PropTypes.func,
         btnType: React.PropTypes.oneOf(['normal', 'image']),
         helpEnabled: React.PropTypes.bool,
         helpText: React.PropTypes.string,
+        tooltip: React.PropTypes.element,
+        tooltipPlace: React.PropTypes.string,
         className: React.PropTypes.string,
-        useInitialExtent: React.PropTypes.bool
+        useInitialExtent: React.PropTypes.bool,
+        bsStyle: React.PropTypes.string
     },
     getDefaultProps() {
         return {
             id: "mapstore-zoomtomaxextent",
-            style: undefined,
             glyphicon: "resize-full",
             text: undefined,
             btnSize: 'xsmall',
             btnType: 'normal',
-            className: undefined,
-            useInitialExtent: false
+            useInitialExtent: false,
+            tooltipPlace: "left",
+            bsStyle: "default"
         };
     },
     render() {
-        if (this.props.btnType === 'normal') {
-            return (
-                <Button
-                    id={this.props.id}
-                    bsStyle="default"
-                    bsSize={this.props.btnSize}
-                    onClick={() => this.props.useInitialExtent ? this.zoomToInitialExtent() : this.zoomToMaxExtent()}
-                    className={this.props.className}
-                    >
-                    {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
-                    {this.props.glyphicon && this.props.text ? "\u00A0" : null}
-                    {this.props.text}
-                </Button>
-            );
-        }
-        return (
-            <ImageButton
+        return this.addTooltip(
+            <Button
                 id={this.props.id}
-                image={this.props.image}
+                bsSize={this.props.btnSize}
                 onClick={() => this.props.useInitialExtent ? this.zoomToInitialExtent() : this.zoomToMaxExtent()}
-                style={this.props.style}
-                className={this.props.className}/>
+                className={this.props.className}
+                bsStyle={this.props.bsStyle}
+                >
+                {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
+                {this.props.glyphicon && this.props.text ? "\u00A0" : null}
+                {this.props.text}
+            </Button>
+        );
+    },
+    addTooltip(btn) {
+        let tooltip = <Tooltip id="locate-tooltip">{this.props.tooltip}</Tooltip>;
+        return (
+            <OverlayTrigger placement={this.props.tooltipPlace} key={"overlay-trigger." + this.props.id} overlay={tooltip}>
+                {btn}
+            </OverlayTrigger>
         );
     },
     zoomToMaxExtent() {

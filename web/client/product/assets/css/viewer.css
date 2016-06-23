@@ -66,20 +66,389 @@ html, body, #container, .fill {
   cursor: not-allowed;
 }
 
-#mapstore-madewithlove {
+.map-logo{
+	position:absolute;
+	width:90px;
+	height:27px;
+	bottom:5px;
+	left:5px;
+	background-image:url(../img/mapstore2_logo.png);
+	background-repeat:no-repeat;
+	background-size:contain;
+    cursor: pointer;
+}
+
+.map-logo > img{
+    width: 90px;
+    height: 27px;
+    opacity: 0;
+}
+
+.with-love {
+    position:absolute;
+	width:90px;
+	height:27px;
+	bottom:5px;
+	margin-left:auto;
+	margin-right:auto;
+	left:0;
+	right:0;
+    background-image:url(../img/made-in-italy-logo.png);
+	background-size:contain;
+}
+
+#mapstore-scalebox {
+    z-index: 10;
+    bottom: -2px !important;
+    right: 50px;
+    left: auto !important;
     position: absolute;
-    bottom: 50px;
-    left: 0;
-    height: 0;
-    width: 100%;
-    overflow: visible;
-    text-align: center;
+    margin: 8px;
+    width: 148px;
 }
 
 .leafletbottom.leafletright, .leaflet-control-minimap{
-    bottom: 50px !important;
+    bottom: 47px !important;
+    right: 49px !important;
+}
+
+.leaflet-control-scale {
+    position: absolute;
+    bottom: -1px;
+    right: 47px;
+    z-index: 1000;
+}
+.leaflet-control-attribution {
+    width: 165px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.leaflet-bottom.leaflet-right {
+    margin-bottom: 0 !important;
 }
 
 .ol-custom-overviewmap, .ol-custom-overviewmap.ol-uncollapsible {
-    bottom: 70px !important;
+    bottom: 55px !important;
+    left: auto !important;
+    right: 57px !important;
+    top: auto !important;
+}
+
+.ol-scale-line.ol-unselectable {
+    right: 58px;
+    left: auto;
+    bottom: 3px;
+}
+
+#navigationBar .mapToolbar {
+    top: auto !important;
+    bottom: 5px;
+    right: 0 !important;
+}
+
+#navigationBar .toolbar-panel {
+    bottom: 80px !important;
+}
+
+#identifyBar .mapToolbar {
+    top: auto !important;
+    bottom: 5px;
+    right: 212px !important;
+}
+
+.panel-close {
+    float: right;
+    width: 10px;
+    cursor: pointer;
+}
+
+#mapstore-mousepositionsettings .form-group {
+    margin-bottom: 0 !important;
+}
+
+#mapstore-mousepositionsettings select, #mapstore-mousepositionsettings button {
+    width: 50% !important;
+    float: right;
+    height: 35px;
+}
+
+#mapstore-mousepositionsettings label {
+    width: 100% !important;
+}
+
+#mapstore-globalspinner  {
+    margin: 0 !important;
+    width: 40px !important;
+    position:static !important;
+    border-radius: 0 !important;
+}
+
+#mapstore-mouseposition .label-info {
+    white-space: normal !important;
+    color: black !important;
+    font-size: 110%;
+    padding: 0 !important;
+}
+
+#mapstore-mouseposition {
+    bottom: 5px !important;
+    right: 264px !important;
+    top: auto !important;
+    margin: 0 !important;
+    text-shadow: none !important;
+    background-color: white !important;
+    width: 160px !important;
+    height: 46px !important;
+    padding-left: 5px;
+    padding-top: 2px;
+}
+
+#mapstore-mouseposition h5 {
+    margin-top: 5px !important;
+}
+
+.mouseposition-separator {
+    display: block;
+}
+
+ #drawer-menu-button {
+     position: absolute;
+ }
+
+#mapstore-drawermenu > div > div:nth-child(2) {
+    display: none;
+}
+
+.navButtons {
+    float: right;
+}
+
+.nav-content #background-switcher .thumbnail {
+    border-radius: 0 !important;
+    margin-bottom: 40px;
+    width: 220px !important;
+}
+.nav-content #background-switcher .thumbnail img {
+    border-radius: 0 !important;
+    height: 90px;
+    width: 220px !important;
+}
+
+.nav-content #background-switcher .thumbnail .caption {
+    font-size: 14px !important;
+    text-align: left !important;
+    top: -20px !important;
+    position: absolute !important;
+}
+
+.nav-content #background-switcher {
+    margin-top: 10px;
+}
+
+#mapstore-drawermenu .nav-menu {
+    background: rgba(255,255,255,1);
+}
+
+#mapstore-drawermenu .panel {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.swipe-header-left-button {
+    float: none !important;
+    right: 45px;
+    top: 4px;
+    position: absolute;
+}
+
+.swipe-header-right-button {
+    float: none !important;
+    position: absolute;
+    top: 4px;
+    right: 5px;
+}
+
+#mapstore-identify-revgeocoder {
+    min-height: 40px;
+    margin-bottom: 10px;
+    border-bottom: solid 1px #BBB;
+}
+
+#mapstore-getfeatureinfo {
+    width: 500px !important;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel-heading {
+    background-color: white;
+    border: none;
+    height: 60px;
+    padding: 0;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel {
+    border: none;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel-body {
+    padding: 0;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel-heading .swipe-header-left-button {
+    right: 55px;
+    top: 0;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel-heading .swipe-header-right-button {
+    top: 0;
+}
+
+#mapstore-getfeatureinfo .modal-body .panel-title {
+    font-weight: bold;
+}
+
+#mapstore-settings .btn-group {
+    width: auto;
+    float: right;
+}
+
+#mapstore-settings .modal-body #mapstore-mousepositionsettings button {
+    float: none;
+    margin-left: 50%;
+}
+
+#mapstore-settings .modal-body #mapstore-mousepositionsettings select {
+    float: none;
+    margin-left: 50%;
+}
+
+#mapstore-settings .modal-body .form-group {
+    margin-top: 15px;
+    border-top: solid 1px #EEE;
+    padding-top: 10px;
+}
+
+.modal-header button.close {
+    margin-top: -12px;
+    opacity: 1;
+}
+
+.modal-header button.close:hover {
+    opacity: 0.5;
+    color: white;
+}
+
+#mapstore-print-panel {
+    width: 825px !important;
+}
+
+.panel-close:after {
+    content: 'x';
+}
+
+#mapstore-print-panel .modal-body .print-mappreview-refresh {
+    top: -96px;
+}
+
+#mapstore-print-panel .print-submit {
+    float: right;
+}
+
+#mapstore-print-panel input[type=radio] {
+    margin-left: 20px;
+}
+
+#mapstore-print-panel .print-map-preview {
+    margin-bottom: -40px;
+}
+
+#mapstore-print-panel .panel-default {
+    border: none;
+}
+
+#mapstore-print-panel .panel-heading .panel-title {
+    font-weight: bold;
+}
+
+#mapstore-print-panel .panel-heading {
+    padding-left: 0;
+    background-color: transparent;
+}
+
+#mapstore-print-panel .panel-body {
+    padding: 10px;
+    border: solid 1px #078AA3;
+}
+
+#mapstore-print-panel .form-control {
+    padding: 0 10px;
+    height: 25px;
+}
+
+#mapstore-print-panel .print-download {
+    margin-right: 10px;
+}
+
+#mapstore-print-panel .print-download a {
+    color: white;
+}
+
+#mapstore-print-panel .print-legend-options .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#mapstore-snapshot-panel {
+    position: absolute;
+    right: 200px;
+    min-width: 725px;
+}
+
+#mapstore-catalog-panel {
+    width: auto;
+    position: absolute;
+    right: 200px;
+    display: inline-block;
+}
+
+#mapstore-catalog-panel .record-item {
+    height: 150px;
+}
+
+#mapstore-about {
+    position: fixed;
+    top: 0;
+    left: calc(50% - 500px);
+    width: 500px;
+}
+
+#mapstore-login-panel {
+    width: 300px;
+}
+#mapstore-login-panel button {
+    float: right !important;
+}
+
+.modal {
+    overflow-y: auto !important;
+}
+
+.draggable-header {
+    cursor: move;
+}
+
+.ms2-loading {
+    background-color: #078aa3 !important;
+    border-bottom: 2px solid #5C9FB4 !important;
+}
+
+.ms2-loading .circle-wrapper {
+    width: 30px;
+    height: 30px;
+    margin: 10px;
+}
+
+.ms2-loading .circle-wrapper .circle:before {
+    background-color: white !important;
 }

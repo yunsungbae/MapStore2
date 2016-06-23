@@ -10,6 +10,8 @@ const {connect} = require('react-redux');
 
 const {loadLocale} = require('../actions/locale');
 
+const {toggleControl} = require('../actions/controls');
+
 const LangBar = connect((state) => ({
     currentLocale: state.locale && state.locale.current
 }), {
@@ -28,19 +30,30 @@ const {Glyphicon} = require('react-bootstrap');
 const assign = require('object-assign');
 
 const SettingsPanel = require('./settings/SettingsPanel');
+const {Panel} = require('react-bootstrap');
+const Dialog = require('../components/misc/Dialog');
 
 const SettingsButton = React.createClass({
     propTypes: {
+        id: React.PropTypes.string,
         undo: React.PropTypes.func,
         redo: React.PropTypes.func,
         mapHistory: React.PropTypes.object,
         settings: React.PropTypes.object,
         overrideSettings: React.PropTypes.object,
         items: React.PropTypes.array,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        wrap: React.PropTypes.bool,
+        wrapWithPanel: React.PropTypes.bool,
+        panelStyle: React.PropTypes.object,
+        panelClassName: React.PropTypes.string,
+        visible: React.PropTypes.bool,
+        toggleControl: React.PropTypes.func,
+        closeGlyph: React.PropTypes.string
     },
     getDefaultProps() {
         return {
+            id: "mapstore-settings",
             settings: {
                 language: true,
                 history: true
@@ -48,7 +61,22 @@ const SettingsButton = React.createClass({
             items: [],
             style: {
                 width: "300px"
-            }
+            },
+            wrap: false,
+            wrapWithPanel: true,
+            panelStyle: {
+                minWidth: "300px",
+                zIndex: 100,
+                position: "absolute",
+                overflow: "auto",
+                top: "100px",
+                left: "calc(50% - 150px)",
+                backgroundColor: "white"
+            },
+            panelClassName: "toolbar-panel",
+            visible: false,
+            toggleControl: () => {},
+            closeGlyph: ""
         };
     },
     renderSettings() {
@@ -81,12 +109,31 @@ const SettingsButton = React.createClass({
             );
     },
     render() {
-        return (
-            <SettingsPanel style={this.props.style}>
-                <h5><Message msgId="language" /></h5>
+        const settings = (
+            <SettingsPanel role="body" style={this.props.style}>
+                <label><Message msgId="language" /></label>
                 {this.renderSettings()}
             </SettingsPanel>
         );
+        if (this.props.wrap) {
+            if (this.props.visible) {
+                if (this.props.wrapWithPanel) {
+                    return (<Panel id={this.props.id} header={<span><span className="settings-panel-title"><Message msgId="settings"/></span><span className="settings-panel-close panel-close" onClick={this.props.toggleControl}></span></span>} style={this.props.panelStyle} className={this.props.panelClassName}>
+                        {settings}
+                    </Panel>);
+                }
+                return (<Dialog id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                    <span role="header">
+                        <span className="settings-panel-title"><Message msgId="settings"/></span>
+                        <button onClick={this.props.toggleControl} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
+                    </span>
+                    {settings}
+                </Dialog>);
+            }
+        } else {
+            return settings;
+        }
+        return null;
     },
     isEnabled(setting) {
         const settings = assign({}, this.props.settings, this.props.overrideSettings);
@@ -96,13 +143,15 @@ const SettingsButton = React.createClass({
 
 const SettingsPlugin = connect((state) => ({
     mapHistory: state.map && state.map.past && {past: state.map.past, future: state.map.future} || {past: [], future: []},
+    visible: state.controls && state.controls.settings && state.controls.settings.enabled || false,
     settings: {
         language: state.locale && true || false,
         history: state.map && state.map.history && true || false
     }
 }), {
     undo,
-    redo
+    redo,
+    toggleControl: toggleControl.bind(null, 'settings', null)
 })(SettingsButton);
 
 module.exports = {
@@ -122,6 +171,13 @@ module.exports = {
             name: 'settings',
             position: 3,
             title: 'settings'
+        },
+        BurgerMenu: {
+            name: 'settings',
+            position: 100,
+            text: <Message msgId="settings"/>,
+            icon: <Glyphicon glyph="cog"/>,
+            action: toggleControl.bind(null, 'settings', null)
         }
     }),
     reducers: {}

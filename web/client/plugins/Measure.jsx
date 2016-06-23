@@ -47,7 +47,7 @@ module.exports = {
     MeasurePlugin: assign(MeasurePlugin, {
         Toolbar: {
             name: 'measurement',
-            position: 6,
+            position: 9,
             panel: true,
             exclusive: true,
             wrap: true,
@@ -56,6 +56,13 @@ module.exports = {
             icon: <img src={lineRuleIcon} />,
             title: "measureComponent.title",
             hide: true
+        },
+        DrawerMenu: {
+            name: 'measurement',
+            position: 3,
+            icon: <img src={lineRuleIcon} />,
+            title: 'measureComponent.title',
+            showPanel: false
         }
     }),
     reducers: {measurement: require('../reducers/measurement')}

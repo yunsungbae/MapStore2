@@ -27,6 +27,13 @@ module.exports = {
             icon: <Glyphicon glyph="home"/>,
             help: <Message msgId="helptexts.gohome"/>,
             action: (context) => goToPage('/', context.router)
+        },
+        BurgerMenu: {
+            name: 'home',
+            position: 1,
+            text: <Message msgId="gohome"/>,
+            icon: <Glyphicon glyph="home"/>,
+            action: (context) => goToPage('/', context.router)
         }
     }),
     reducers: {}

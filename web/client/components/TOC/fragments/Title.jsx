@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-
-var Title = React.createClass({
+const React = require('react');
+require("./css/toctitle.css");
+const Title = React.createClass({
     propTypes: {
         node: React.PropTypes.object,
         onClick: React.PropTypes.func
@@ -23,7 +23,7 @@ var Title = React.createClass({
     },
     render() {
         let expanded = (this.props.node.expanded !== undefined) ? this.props.node.expanded : true;
-        return (<span onClick={() => this.props.onClick(this.props.node.id || this.props.node.name, expanded)}>{this.props.node.title || this.props.node.name}</span>);
+        return (<span className="toc-title" onClick={() => this.props.onClick(this.props.node.id || this.props.node.name, expanded)}>{this.props.node.title || this.props.node.name}</span>);
     }
 });
 

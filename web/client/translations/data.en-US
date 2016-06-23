@@ -23,6 +23,7 @@
         "background": "Background",
         "language": "Language",
         "mousePositionCoordinates": "Coordinates indicator",
+        "showMousePositionCoordinates": "Show Coordinates",
         "menu": "Menu",
         "settings": "Settings",
         "help": "Help",
@@ -124,8 +125,16 @@
         "info":{
             "tooltip": "Query objects on map"
         },
+        "expandtoolbar": {
+            "tooltip": "Expand / Collapse"
+        },
         "getFeatureInfoTitle": "Feature Info",
         "identifyTitle": "Feature Info",
+        "identifyRevGeocodeHeader": "Coordinates",
+        "identifyRevGeocodeModalTitle": "Address",
+        "identifyRevGeocodeSubmitText": "More Info",
+        "identifyRevGeocodeCloseText": "Close",
+        "identifyRevGeocodeError": "Unable to geocode",
         "getFeatureInfoError": {
             "title": "Ooops! Something's wrong",
             "text": "An error has occurred during this <b>GetFeatureInfo</b> request"
@@ -139,6 +148,10 @@
         },
         "infoFormatLbl": "Identify response format",
         "measureComponent": {
+            "Measure": "Measure",
+            "MeasureLength": "Measure Distance",
+            "MeasureArea": "Measure Area",
+            "MeasureBearing": "Measure Bearing",
             "tooltip": "Measure length and area",
             "title": "Measure",
             "lengthButtonText": "Line",
@@ -249,6 +262,11 @@
             "popup": "You are within {distance} {unit} from this point",
             "outsideMapBoundsMsg": "You seem located outside the boundaries of the map"
         },
+        "zoombuttons": {
+            "zoomInTooltip": "Increase Zoom",
+            "zoomOutTooltip": "Decrease Zoom",
+            "zoomAllTooltip": "Zoom To Max Extent"
+        },
         "helptexts": {
             "scaleBox": "This is the helptext for the ScaleBox",
             "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
@@ -256,7 +274,7 @@
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
             "metadataExplorer": "This is the helptext for the MetadataExplorer",
             "settingsPanel": "This is the helptext for the SettingsPanel",
-            "gohome": "This is the helptext forr Home",
+            "gohome": "This is the helptext for Home",
             "measureComponent": "This is the helptext for the MeasureComponent",
             "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
             "layerSwitcher": "This is the helptext for the LayerSwitcher",
@@ -265,7 +283,10 @@
             "snapshot": "This is the helptext for the Snapshot",
             "print": "This is the helptext for Print",
             "shapefile": "This is the helptext for the Shapefile",
-            "rasterstyler": "Define min value, max value, number of classes and color ramp and generate new classified raster layer"
+            "rasterstyler": "Define min value, max value, number of classes and color ramp and generate new classified raster layer",
+            "expandToolbar": "This is the helptext for Expand / Collapse",
+            "historyundo": "Use this button to go to the previous map zoom and location",
+            "historyredo": "Use this button to go to the next map zoom and location"
         },
         "queryform": {
             "query": "Search",
@@ -330,7 +351,7 @@
             "title": "Snapshot Preview",
             "save": "Save",
             "tooltip": "Save a snapshot of the map.",
-            "googleBingError": "Googole and Bing layers aren't available for the snapshot, due to copyright restrictions.",
+            "googleBingError": "Google and Bing layers aren't available for the snapshot, due to copyright restrictions.",
             "downloadingSnapshots": "pending snapshot generation",
             "date": "Date",
             "layers": "Layers",

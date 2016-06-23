@@ -23,6 +23,7 @@
         "background": "Sfondo",
         "language": "Lingua",
         "mousePositionCoordinates": "Indicatore di coordinate",
+        "showMousePositionCoordinates": "Mostra Coordinate",
         "menu": "Menu",
         "settings": "Impostazioni",
         "help": "Aiuto",
@@ -31,7 +32,7 @@
         "noresultfound": "Nessun Risultato Trovato",
         "save": "Salva",
         "opacity": "Opacità",
-        "close": "Chuidi",
+        "close": "Chiudi",
         "home":{
             "open": "Apri",
             "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"http://geosolutions-it.github.io/MapStore2/\">home page</a> per maggiori dettagli.",
@@ -125,8 +126,16 @@
         "info":{
             "tooltip": "Interroga gli oggetti sulla mappa"
         },
+        "expandtoolbar": {
+            "tooltip": "Espandi / Collassa"
+        },
         "getFeatureInfoTitle": "Informazioni Sulle Feature",
         "identifyTitle": "Informazioni Sulle Feature",
+        "identifyRevGeocodeHeader": "Coordinate",
+        "identifyRevGeocodeModalTitle": "Indirizzo",
+        "identifyRevGeocodeSubmitText": "Più informazioni",
+        "identifyRevGeocodeCloseText": "Chiudi",
+        "identifyRevGeocodeError": "Impossibile eseguire il geocoding",
         "getFeatureInfoError": {
             "title": "Ooops! Qualcosa non va",
             "text": "Si è verificato un errore nel fare questa richiesta <b>GetFeatureInfo</b>"
@@ -140,6 +149,10 @@
         },
         "infoFormatLbl": "Formato risposte interrogazioni su mappa",
         "measureComponent": {
+            "Measure": "Misura",
+            "MeasureLength": "Misura Distanza",
+            "MeasureArea": "Misura Area",
+            "MeasureBearing": "Misura Direzione",
             "tooltip": "Misurazione lunghezza e l'area",
             "title": "Misurazione",
             "lengthButtonText": "Linea",
@@ -147,7 +160,7 @@
             "resetButtonText": "Azzerare",
             "lengthLabel": "Lunghezza",
             "areaLabel": "Area",
-            "bearingLabel": "Rilevamento"
+            "bearingLabel": "Direzione"
         },
         "search":{
             "placeholder": "Cerca un indirizzo o inserisci coordinate..."
@@ -250,6 +263,11 @@
             "popup": "Sei nel raggio di {distance} {unit} da questo punto",
             "outsideMapBoundsMsg": "Sembri al di fuori dei confini della mappa"
         },
+        "zoombuttons": {
+            "zoomInTooltip": "Aumenta Zoom",
+            "zoomOutTooltip": "Diminuisci Zoom",
+            "zoomAllTooltip": "Zoom Alla Massima Estensione"
+        },
         "helptexts": {
             "scaleBox": "Questo è il testo di aiuto per ScaleBox",
             "zoomToMaxExtentButton": "Questo è il testo di aiuto per ZoomToMaxExtentButton",
@@ -266,7 +284,10 @@
             "snapshot": "Questo è il testo di aiuto per Snapshot",
             "print": "Questo è il testo di aiuto per Print",
             "shapefile": "Seleziona lo shapfile compresso, setta lo style ed importa il nuovo layer locale",
-            "rasterstyler": "Imposta min, max, numero delle classi e colorRamp e genera una nuova classificazione per il raster layer selezionato"
+            "rasterstyler": "Imposta min, max, numero delle classi e colorRamp e genera una nuova classificazione per il raster layer selezionato",
+            "expandToolbar": "Questo è il testo di aiuto per Espandi / Collassa",
+            "historyundo": "Usa questo pulsante per tornare alla vista della mappa precedente",
+            "historyredo": "Use questo pulsante per andare alla vista della mappa successiva"
         },
         "queryform": {
             "query": "Ricerca",
