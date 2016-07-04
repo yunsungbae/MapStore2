@@ -10,7 +10,6 @@ var React = require('react');
 var {Input, Glyphicon} = require('react-bootstrap');
 var LocaleUtils = require('../../../utils/LocaleUtils');
 
-
 var delay = (
     function() {
         var timer = 0;
@@ -20,6 +19,7 @@ var delay = (
     };
     })();
 
+require('./searchbar.css');
 
 /**
  * Search Bar component. With AutoComplete
@@ -41,7 +41,6 @@ let SearchBar = React.createClass({
     },
     getDefaultProps() {
         return {
-            className: "MapSearchBar",
             onSearch: () => {},
             onSearchReset: () => {},
             placeholderMsgId: "search.placeholder",
@@ -70,7 +69,10 @@ let SearchBar = React.createClass({
         }
     },
     onFocus() {
-        this.search();
+        if (this.props.typeAhead ) {
+            this.search();
+        }
+
     },
     onBlur() {
         // delay this to make the click on result run anyway
@@ -92,7 +94,7 @@ let SearchBar = React.createClass({
             placeholder = this.props.placeholder;
         }
         return (
-            <div className={this.props.className}>
+            <div className={"MapSearchBar" + (this.props.className ? " " + this.props.className : "")}>
                 <Input
                     key="search-input"
                     placeholder={placeholder}

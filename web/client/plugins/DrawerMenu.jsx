@@ -38,7 +38,8 @@ const DrawerMenu = React.createClass({
         glyph: React.PropTypes.string,
         buttonStyle: React.PropTypes.string,
         menuOptions: React.PropTypes.object,
-        singleSection: React.PropTypes.bool
+        singleSection: React.PropTypes.bool,
+        buttonClassName: React.PropTypes.string
     },
     contextTypes: {
         messages: React.PropTypes.object,
@@ -52,7 +53,8 @@ const DrawerMenu = React.createClass({
             glyph: "menu-hamburger",
             buttonStyle: "default",
             menuOptions: {},
-            singleSection: false
+            singleSection: false,
+            buttonClassName: "drawer-menu-button"
         };
     },
     renderItems() {
@@ -68,7 +70,7 @@ const DrawerMenu = React.createClass({
                 }}}
                 />);
             return this.props.singleSection ? (
-                <Panel icon={tool.icon} glyph={tool.glyph} key={tool.name} header={<Message msgId={tool.title}/>} eventKey={(index + 1) + ""}>
+                <Panel icon={tool.icon} glyph={tool.glyph} buttonConfig={tool.buttonConfig} key={tool.name} header={<Message msgId={tool.title}/>} eventKey={(index + 1) + ""}>
                     {plugin}
                 </Panel>
             ) : (<Section key={tool.name} renderInModal={tool.renderInModal || false} eventKey={(index + 1) + ""} header={<Message msgId={tool.title} />}>
@@ -79,7 +81,7 @@ const DrawerMenu = React.createClass({
     render() {
         return (
             <div id={this.props.id}>
-                <Button id="drawer-menu-button" bsStyle={this.props.buttonStyle} key="menu-button" className="square-button" onClick={this.props.toggleMenu}><Glyphicon glyph={this.props.glyph}/></Button>
+                <Button id="drawer-menu-button" bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu}><Glyphicon glyph={this.props.glyph}/></Button>
                 <Menu single={this.props.singleSection} {...this.props.menuOptions} title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
                 </Menu>

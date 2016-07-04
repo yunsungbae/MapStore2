@@ -53,7 +53,8 @@ const LayerTree = React.createClass({
         updateNode: React.PropTypes.func,
         activateLegendTool: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
-        visibilityCheckType: React.PropTypes.string
+        visibilityCheckType: React.PropTypes.string,
+        settingsOptions: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -65,7 +66,8 @@ const LayerTree = React.createClass({
             updateNode: () => {},
             activateLegendTool: true,
             activateSettingsTool: true,
-            visibilityCheckType: "checkbox"
+            visibilityCheckType: "checkbox",
+            settingsOptions: {}
         };
     },
     getNoBackgroundLayers(group) {
@@ -88,6 +90,7 @@ const LayerTree = React.createClass({
                                   visibilityCheckType={this.props.visibilityCheckType}
                                   >
                     <DefaultLayer
+                            settingsOptions={this.props.settingsOptions}
                             onToggle={this.props.onToggleLayer}
                             onSettings={this.props.onSettings}
                             propertiesChangeHandler={this.props.layerPropertiesChangeHandler}
@@ -132,13 +135,14 @@ module.exports = {
             wrap: true,
             title: 'layers',
             icon: <img src={layersIcon}/>,
-            hide: true
+            priority: 1
         },
         DrawerMenu: {
             name: 'toc',
             position: 1,
             icon: <img src={layersIcon}/>,
-            title: 'layers'
+            title: 'layers',
+            priority: 2
         }
     }),
     reducers: {}

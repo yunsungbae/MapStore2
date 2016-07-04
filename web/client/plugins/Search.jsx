@@ -28,8 +28,6 @@ const {isArray} = require('lodash');
 
 const MediaQuery = require('react-responsive');
 
-require('./searchbar/searchbar.css');
-
 const selector = createSelector([
     mapSelector,
     state => state.search || null
@@ -80,6 +78,7 @@ const SearchPlugin = connect((state) => ({
     render() {
         return (<span>
             <HelpWrapper
+                id="search-help"
                 key="seachBar-help"
                     helpText={<Message msgId="helptexts.searchBar"/>}>
                     {this.getSearchAndToggleButton()}
@@ -96,7 +95,7 @@ module.exports = {
             name: 'search',
             position: 1,
             tool: true,
-            hide: true
+            priority: 1
         }
     }),
     reducers: {search: require('../reducers/search')}

@@ -3,11 +3,10 @@
 	"geoStoreUrl": "/mapstore/rest/geostore/",
   "printUrl": "http://demo.geo-solutions.it/geoserver/pdf/info.json",
 	"bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
-	"initialMapFilter": "*",
+	"initialMapFilter": "MS2",
 	"plugins": {
 		"mobile": ["Home", {
-			"name": "About",
-			"hide": true
+			"name": "About"
 		}, {
 			"name": "Map",
 			"cfg": {
@@ -18,14 +17,12 @@
 			 	"name": "DrawerMenu"
 		 }, {
 			 	"name": "TOC",
-				"hide": true,
 				"cfg": {
 					"activateLegendTool": true,
 					"activateSettingsTool": false
 				}
 		 }, {
 			 	"name": "Settings",
-				"hide": true,
 				"cfg": {
 					"overrideSettings": {
 	            "language": true,
@@ -45,8 +42,7 @@
               "sm": 6,
               "md": 6
           }
-				},
-				"hide": true
+				}
 		 }, {
 			 	"name": "Identify",
 				"hideFrom": ["Settings"],
@@ -92,13 +88,13 @@
         "zoomControl": false
 			}
 		}, {
-			"name": "Help",
-			"hideFrom": "Toolbar"
+			"name": "Help"
 		}, {
         "name": "DrawerMenu",
 				"cfg": {
-					"glyph": "1-stilo",
+					"glyph": "pencil",
 					"buttonStyle": "primary",
+          "buttonClassName": "square-button",
 					"singleSection": true
 				}
     },
@@ -106,14 +102,6 @@
        "name": "Identify",
        "showIn": ["IdentifyBar", "Settings"],
 			 "cfg": {
-				 "panelClassName": "modal-dialog info-panel modal-content",
-				 "headerClassName": "modal-header",
-				 "bodyClassName": "modal-body info-wrap",
-				 "asPanel": false,
-				 "headerGlyph": "",
-         "glyph": "map-marker",
-				 "closeGlyph": "1-close",
-				 "wrapRevGeocode": false,
 				 "enableRevGeocode": true,
 				 "viewerOptions": {
 					"container": "{context.ReactSwipe}",
@@ -131,35 +119,17 @@
     "MadeWithLove",
     {
 			  "name": "Locate",
-				"hide": true,
-				"cfg": {
-					"glyph": "1-position-1"
-				},
 				"override": {
 					"Toolbar": {
 						"alwaysVisible": true
 					}
 				}
 		}, {
-			  "name": "Home",
-				"hide": true,
-				"hideFrom": ["Toolbar"]
+			  "name": "Home"
 		}, {
-				"name": "TOC",
-				"hideFrom": ["Toolbar"],
-				"hide": true,
-				"cfg": {
-					"visibilityCheckType": "glyph"
-				},
-				"override": {
-					"DrawerMenu": {
-						"glyph": "1-layer"
-					}
-				}
+				"name": "TOC"
 		}, {
 				"name": "BackgroundSwitcher",
-				"hideFrom": ["Toolbar"],
-				"hide": true,
 				"cfg": {
 					"fluid": true,
 		      "columnProperties": {
@@ -167,62 +137,24 @@
               "sm": 12,
               "md": 12
           }
-				},
-				"override": {
-					"DrawerMenu": {
-							"glyph": "1-map"
-						}
 				}
 		}, {
 				"name": "Measure",
-				"hide": true,
-        "showIn": ["DrawerMenu"],
         "cfg":{
-          "showResults": false,
-          "lineGlyph": "1-measure-lenght",
-          "areaGlyph": "1-measure-area",
-          "bearingGlyph": "1-bearing"
-        },
-				"override": {
-					"DrawerMenu": {
-						"glyph": "1-stilo"
-					}
-				}
-		}, {
-				"name": "MeasureResults",
-        "cfg":{
-          "closeGlyph": "1-close",
-          "withPanelAsContainer": false
+          "showResults": false
         }
 		}, {
-				"name": "Print",
-				"cfg": {
-					"closeGlyph": "1-close",
-					"submitConfig": {
-						"buttonConfig": {
-							"bsSize": "medium",
-							"bsStyle": "primary"
-						},
-						"glyph": ""
-					},
-					"previewOptions": {
-						"buttonStyle": "primary"
-					},
-					"withPanelAsContainer": false
-				},
-				"hideFrom": ["Toolbar"]
+				"name": "MeasureResults"
+		}, {
+				"name": "Print"
 		}, {
 				"name": "ShapeFile",
-				"hideFrom": ["Toolbar"],
 				"cfg": {
 					"wrap": true
 				}
 		}, {
 				"name": "Settings",
-				"hideFrom": ["Toolbar", "DrawerMenu"],
 				"cfg": {
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
           "overrideSettings": {
             "history": false
           },
@@ -230,35 +162,24 @@
 				}
 		}, {
 				"name": "MetadataExplorer",
-				"hideFrom": ["Toolbar"],
 				"cfg": {
 					"wrap": true,
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
 					"chooseCatalogUrl": false,
 					"initialCatalogURL": "http://demo.geo-solutions.it/geoserver/csw"
 				}
 		}, {
 			"name": "About",
-			"hideFrom": ["DrawerMenu"],
-			"cfg": {
-				"modalConfig": {
-						"useModal": false,
-			      "closeGlyph": "1-close"
-				}
-			}
+			"hideFrom": ["DrawerMenu"]
 		}, "MousePosition", {
 				"name": "Search",
 				"cfg": {
 					"withToggle": ["max-width: 768px", "min-width: 768px"]
-				},
-				"hide": true
+				}
 		}, {
       "name": "Toolbar",
       "id": "NavigationBar",
       "stateSelector": "toolbar",
       "cfg": {
-				"buttonStyle": "primary",
         "id": "navigationBar"
       }
     }, {
@@ -266,22 +187,16 @@
       "id": "IdentifyBar",
 			"stateSelector": "identify",
       "cfg": {
-				"buttonStyle": "primary",
         "id": "identifyBar"
       },
       "isDefault": false
     },
     "ScaleBox",
     {
-      "name": "ZoomAll",
-      "hide": true
+      "name": "ZoomAll"
     },
     {
 			"name": "MapLoading",
-			"hide": true,
-			"cfg": {
-				"className": "ms2-loading"
-			},
 			"override": {
 				"Toolbar": {
 					"alwaysVisible": true
@@ -290,18 +205,13 @@
 		},
     {
 				"name": "Snapshot",
-				"hide": true,
 				"hideFrom": ["Toolbar"],
 				"cfg": {
-					"wrap": true,
-					"wrapWithPanel": false,
-					"closeGlyph": "1-close",
-					"buttonStyle": "primary"
+					"wrap": true
 				}
 		},
     {
       "name":"ZoomIn",
-      "hide": true,
 			"override": {
 				"Toolbar": {
 					"alwaysVisible": true
@@ -310,7 +220,6 @@
     },
     {
       "name":"ZoomOut",
-      "hide": true,
 			"override": {
 				"Toolbar": {
 					"alwaysVisible": true
@@ -318,51 +227,22 @@
 			}
     }, {
 			"name": "Login",
-			"hide": true,
       "cfg": {
           "nav": false,
           "menuProps": {
               "noCaret": true
-          },
-					"toolsCfg": [{
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}, {
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}, {
-						"buttonSize": "small",
-						"includeCloseButton": false,
-						"useModal": false,
-						"closeGlyph": "1-close"
-					}]
+          }
       }
 		},
 		"OmniBar",
 		{
-			"name": "BurgerMenu",
-			"hide": true
+			"name": "BurgerMenu"
 		}, {
-			"name": "Expander",
-			"hide": true
+			"name": "Expander"
 		}, {
-      "name": "Undo",
-      "hide": true,
-      "cfg": {
-        "glyph": "1-screen-backward",
-        "buttonStyle": "primary"
-      }
-    }, {
-      "name": "Redo",
-      "hide": true,
-      "cfg": {
-        "glyph": "1-screen-forward",
-        "buttonStyle": "primary"
-      }
-    }]
+			"name": "Undo"
+		}, {
+			"name": "Redo"
+		}]
 	}
 }
