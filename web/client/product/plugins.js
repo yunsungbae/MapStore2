@@ -43,10 +43,11 @@ module.exports = {
         MapSearchPlugin: require('../plugins/MapSearch'),
         AttributionPlugin: require('./plugins/Attribution'),
         HeaderPlugin: require('./plugins/Header'),
-        FooterPlugin: require('./plugins/Footer')
+        FooterPlugin: require('./plugins/Footer'),
+        SharePlugin: require('../plugins/Share')
     },
     requires: {
-        ReactSwipe: require('react-swipe'),
+        ReactSwipe: require('react-swipeable-views').default,
         SwipeHeader: require('../components/data/identify/SwipeHeader')
     }
 };

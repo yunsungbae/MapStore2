@@ -290,14 +290,14 @@ html, body, #container, .fill {
     }
 }
 
-#mapstore-getfeatureinfo .modal-body .panel-heading {
+#mapstore-getfeatureinfo .swipeable-view .panel-heading {
     background-color: white;
     border: none;
     height: 60px;
     padding: 0;
 }
 
-#mapstore-getfeatureinfo .modal-body .panel {
+#mapstore-getfeatureinfo .swipeable-view .panel {
     border: none;
 }
 
@@ -305,16 +305,16 @@ html, body, #container, .fill {
     padding: 0;
 }
 
-#mapstore-getfeatureinfo .modal-body .panel-heading .swipe-header-left-button {
+#mapstore-getfeatureinfo .swipeable-view .panel-heading .swipe-header-left-button {
     right: 55px;
     top: 0;
 }
 
-#mapstore-getfeatureinfo .modal-body .panel-heading .swipe-header-right-button {
+#mapstore-getfeatureinfo .swipeable-view .panel-heading .swipe-header-right-button {
     top: 0;
 }
 
-#mapstore-getfeatureinfo .modal-body .panel-title {
+#mapstore-getfeatureinfo .swipeable-view .panel-title {
     font-weight: bold;
 }
 
@@ -353,9 +353,16 @@ html, body, #container, .fill {
     opacity: 0.5;
     color: white;
 }
+@media (min-width: 992px) {
+    #mapstore-print-panel {
+        width: 825px !important;
+    }
+}
 
-#mapstore-print-panel {
-    width: 825px !important;
+@media (max-width: 991px) {
+    #mapstore-print-panel {
+        width: 500px !important;
+    }
 }
 
 .panel-close:after {
@@ -375,7 +382,7 @@ html, body, #container, .fill {
 }
 
 #mapstore-print-panel .print-map-preview {
-    margin-bottom: -40px;
+    margin-bottom: 15px;
 }
 
 #mapstore-print-panel .panel-default {
