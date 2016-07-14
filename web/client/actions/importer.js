@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 var API = require('../api/geoserver/Importer');
-const _ = require('lodash');
-const assign = require('object-assign');
+
 const IMPORTS_LOADING = 'IMPORTS_LOADING';
 const IMPORTS_CREATION_ERROR = 'IMPORTS_CREATION_ERROR';
 const IMPORT_CREATED = 'IMPORT_CREATED';
@@ -43,19 +42,7 @@ const IMPORT_DELETE_ERROR = 'IMPORT_DELETE_ERROR';
 /*******************/
 /* UTILITY         */
 /*******************/
-const getAuthOptionsFromState = function(state, baseParams = {}) {
-    let authHeader = state && state.security && state.security.authHeader;
-    if (authHeader) {
-        return _.merge({
-            // TODO support deep merge of attributes
-            headers: {
-                'Authorization': authHeader
-            }
-        }, baseParams);
-    }
-    return baseParams;
 
-};
 /**
  * Check if task matches with the preset.
  * The match is by state, data.file.format and data.file.name
@@ -281,10 +268,9 @@ function uploadProgress(progress) {
 
 /** IMPORT **/
 function createImport(geoserverRestURL, body = {}) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(loading());
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        API.createImport(geoserverRestURL, body, authOpts).then((response) => {
+        API.createImport(geoserverRestURL, body).then((response) => {
             dispatch(importCreated(response && response.data && response.data.import));
             dispatch(loading(null, false));
         }).catch((e) => {
@@ -294,10 +280,9 @@ function createImport(geoserverRestURL, body = {}) {
     };
 }
 function loadImports(geoserverRestURL) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(loading());
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        API.getImports(geoserverRestURL, authOpts).then((response) => {
+        API.getImports(geoserverRestURL).then((response) => {
             dispatch(importsLoaded(response && response.data && response.data.imports));
             dispatch(loading(null, false));
         }).catch((e) => {
@@ -308,10 +293,9 @@ function loadImports(geoserverRestURL) {
 }
 
 function loadImport(geoserverRestURL, importId) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(loading({importId: importId}));
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        API.loadImport(geoserverRestURL, importId, authOpts).then((response) => {
+        API.loadImport(geoserverRestURL, importId).then((response) => {
             dispatch(importLoaded(response && response.data && response.data.import));
             dispatch(loading({importId: importId}, false));
         }).catch((e) => {
@@ -321,10 +305,9 @@ function loadImport(geoserverRestURL, importId) {
     };
 }
 function deleteImport(geoserverRestURL, importId) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(loading({importId: importId, message: "deleting"}));
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        API.deleteImport(geoserverRestURL, importId, authOpts).then(() => {
+        API.deleteImport(geoserverRestURL, importId).then(() => {
             dispatch(importDeleted(importId));
             dispatch(loading({importId: importId, message: "deleting"}, false));
         }).catch((e) => {
@@ -337,8 +320,7 @@ function deleteImport(geoserverRestURL, importId) {
 function runImport(geoserverRestURL, importId) {
     return (dispatch, getState) => {
         dispatch(loading({importId}));
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        API.runImport(geoserverRestURL, importId, authOpts).then(() => {
+        API.runImport(geoserverRestURL, importId).then(() => {
             dispatch(importRunSuccess(importId));
             if (getState && getState().selectedImport && getState().selectedImport.id === importId) {
                 loadImport(geoserverRestURL, importId);
@@ -353,20 +335,19 @@ function runImport(geoserverRestURL, importId) {
 /** LAYER **/
 
 function loadLayer(geoserverRestURL, importId, taskId) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId, element: "layer", message: "loadinglayer"}));
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        return API.loadLayer(geoserverRestURL, importId, taskId, authOpts).then((response) => {
+        return API.loadLayer(geoserverRestURL, importId, taskId).then((response) => {
             dispatch(layerLoaded(importId, taskId, response && response.data && response.data.layer));
             dispatch(loading({importId: importId, taskId: taskId, element: "layer", message: "loadinglayer"}, false));
         });
     };
 }
 function updateLayer(geoserverRestURL, importId, taskId, layer) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId, element: "layer", message: "loadinglayer"}));
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        return API.updateLayer(geoserverRestURL, importId, taskId, layer, authOpts).then((response) => {
+
+        return API.updateLayer(geoserverRestURL, importId, taskId, layer).then((response) => {
             dispatch(layerUpdated(importId, taskId, response && response.data && response.data.layer));
             dispatch(loading({importId: importId, taskId: taskId, element: "layer", message: "loadinglayer"}, false));
         });
@@ -374,10 +355,9 @@ function updateLayer(geoserverRestURL, importId, taskId, layer) {
 }
 /** TASKS **/
 function loadTask(geoserverRestURL, importId, taskId) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId}));
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        API.loadTask(geoserverRestURL, importId, taskId, authOpts).then((response) => {
+        API.loadTask(geoserverRestURL, importId, taskId).then((response) => {
             dispatch(importTaskLoaded(response && response.data && response.data.task));
             dispatch(loadLayer(geoserverRestURL, importId, taskId));
             dispatch(loading({importId: importId, taskId: taskId}, false));
@@ -403,16 +383,15 @@ function updateUI(geoserverRestURL, importId, taskId) {
     };
 }
 function updateTask(geoserverRestURL, importId, taskId, body, element, message = "updating") {
-    return (dispatch, getState) => {
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        if (authOpts && authOpts.headers ) {
-            // this check don't support encoding indication
-            authOpts.headers['Content-Type'] = 'application/json';
-        } else {
-            authOpts.headers = {'Content-Type': 'application/json'};
-        }
+    return (dispatch) => {
+        let opts = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
         dispatch(loading({importId: importId, taskId: taskId, message}));
-        return API.updateTask(geoserverRestURL, importId, taskId, element, body, authOpts).then((response) => {
+        return API.updateTask(geoserverRestURL, importId, taskId, element, body, opts).then((response) => {
             dispatch(importTaskUpdated(response && response.data && response.data.task, importId, taskId));
             dispatch(loading({importId: importId, taskId: taskId}, false));
             dispatch(updateUI(geoserverRestURL, importId, taskId));
@@ -421,10 +400,9 @@ function updateTask(geoserverRestURL, importId, taskId, body, element, message =
 }
 
 function deleteTask(geoserverRestURL, importId, taskId) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId, message: "deleting"}));
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        return API.deleteTask(geoserverRestURL, importId, taskId, authOpts).then(() => {
+        return API.deleteTask(geoserverRestURL, importId, taskId).then(() => {
             dispatch(importTaskDeleted(importId, taskId));
             dispatch(loading({importId: importId, taskId: taskId, message: "deleting"}, false));
             dispatch(loading({importId: importId, message: "deleting"}, false));
@@ -434,10 +412,9 @@ function deleteTask(geoserverRestURL, importId, taskId) {
 
 /** TRANFORMS **/
 function loadTransform(geoserverRestURL, importId, taskId, transformId) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}));
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        return API.loadTransform(geoserverRestURL, importId, taskId, transformId, authOpts).then((response) => {
+        return API.loadTransform(geoserverRestURL, importId, taskId, transformId).then((response) => {
             let transform = response && response.data;
             dispatch(transformLoaded(importId, taskId, transformId, transform));
             dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}, false));
@@ -447,8 +424,7 @@ function loadTransform(geoserverRestURL, importId, taskId, transformId) {
 function deleteTransform(geoserverRestURL, importId, taskId, transformId) {
     return (dispatch, getState) => {
         dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}));
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        return API.deleteTransform(geoserverRestURL, importId, taskId, transformId, authOpts).then(() => {
+        return API.deleteTransform(geoserverRestURL, importId, taskId, transformId).then(() => {
             dispatch(transformDeleted(importId, taskId, transformId));
             dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}, false));
             let state = getState().importer;
@@ -461,10 +437,9 @@ function deleteTransform(geoserverRestURL, importId, taskId, transformId) {
 }
 
 function updateTransform(geoserverRestURL, importId, taskId, transformId, transform) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}));
-        let authOpts = getAuthOptionsFromState(getState && getState());
-        return API.updateTransform(geoserverRestURL, importId, taskId, transformId, transform, authOpts).then((response) => {
+        return API.updateTransform(geoserverRestURL, importId, taskId, transformId, transform).then((response) => {
             dispatch(transformUpdated(importId, taskId, transformId, response && response.data));
             dispatch(loading({importId: importId, taskId: taskId, transformId: transformId, message: "loading"}, false));
         }).catch((e) => {
@@ -476,7 +451,7 @@ function updateTransform(geoserverRestURL, importId, taskId, transformId, transf
 /** PRESETS **/
 function applyPreset(geoserverRestURL, importId, task, preset) {
 
-    return (dispatch, getState) => {
+    return (dispatch) => {
         const applyChange = (element, change) => { // TODO better as an action
             dispatch(updateTask(geoserverRestURL, importId, task.id, change, element, "applyPresets"));
         };
@@ -494,8 +469,7 @@ function applyPreset(geoserverRestURL, importId, task, preset) {
         if (preset.transforms) {
             preset.transforms.forEach( (transform) => {
                 dispatch(loading({importId: importId, taskId: task.id, message: "applyPresets"}));
-                let authOpts = getAuthOptionsFromState(getState && getState());
-                API.addTransform(geoserverRestURL, importId, task.id, transform, authOpts).then(() => {
+                API.addTransform(geoserverRestURL, importId, task.id, transform).then(() => {
                     dispatch(loading({importId: importId, taskId: task.id, message: "applyPresets"}, false));
                 });
             });
@@ -503,7 +477,7 @@ function applyPreset(geoserverRestURL, importId, task, preset) {
     };
 }
 function applyPresets(geoserverRestURL, importId, tasks, presets) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         if (tasks) {
             tasks.forEach( (task) => {
                 presets.forEach( (preset) => {
@@ -512,9 +486,8 @@ function applyPresets(geoserverRestURL, importId, tasks, presets) {
                             dispatch(applyPreset(geoserverRestURL, importId, task, preset));
                         }
                     } else {
-                        let authOpts = getAuthOptionsFromState(getState && getState());
                         dispatch(loading({importId: importId, taskId: task.id, message: "analyzing"}));
-                        API.loadTask(geoserverRestURL, importId, task.id, authOpts).then((response) => {
+                        API.loadTask(geoserverRestURL, importId, task.id).then((response) => {
                             dispatch(loading({importId: importId, taskId: task.id}, false));
                             let completeTask = response && response.data && response.data.task;
                             if (matchPreset(preset, completeTask)) {
@@ -533,14 +506,12 @@ function applyPresets(geoserverRestURL, importId, tasks, presets) {
 function uploadImportFiles(geoserverRestURL, importId, files, presets) {
     return (dispatch, getState) => {
         dispatch(loading({importId: importId, uploadingFiles: files}));
-        let authOpts = getAuthOptionsFromState(getState && getState());
         let progressOpts = {
             progress: (progressEvent) => {
                 dispatch(uploadProgress(progressEvent.loaded / progressEvent.total));
             }
         };
-        let opts = assign(authOpts, progressOpts);
-        API.uploadImportFiles(geoserverRestURL, importId, files, opts).then((response) => {
+        API.uploadImportFiles(geoserverRestURL, importId, files, progressOpts).then((response) => {
             let tasks = response && response.data && response.data.tasks || response && response.data && [response.data.task];
             dispatch(fileUploaded(files));
             dispatch(importTaskCreated(tasks));
