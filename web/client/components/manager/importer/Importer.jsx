@@ -13,7 +13,7 @@ const FileUploader = require('../../file/FileUploader');
 const Task = require('./Task');
 const Import = require('./Import');
 const Transform = require('./Transform');
-const {Grid, Col, Row} = require('react-bootstrap');
+const {Grid, Col, Row, Alert} = require('react-bootstrap');
 const BreadCrumb = require('./BreadCrumb');
 const Importer = React.createClass({
     propTypes: {
@@ -79,6 +79,11 @@ const Importer = React.createClass({
             };
         }
         return presets.find((preset) => preset.import );
+    },
+    renderError() {
+        if (this.props.error) {
+            return (<Alert bsStyle="danger">There was an error during the import list loading: {this.props.error.statusText}</Alert>);
+        }
     },
     renderLoading() {
         if (this.props.loading) {
@@ -169,6 +174,7 @@ const Importer = React.createClass({
                 <Row>
                     {this.renderLoading()}
                     {this.renderDetails()}
+                    {this.renderError()}
                 </Row>
             </Grid>);
     }

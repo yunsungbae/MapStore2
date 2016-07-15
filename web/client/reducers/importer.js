@@ -135,15 +135,16 @@ function importer(state = {}, action) {
         }
         case IMPORTS_LIST_LOADED:
             return assign({}, state, {
+                loadingError: null,
                 imports: action.imports,
                 selectedImport: null,
                 selectedTask: null,
                 selectedTransform: null
             });
         case IMPORTS_LIST_LOAD_ERROR:
-            return {
+            return assign({}, {
                 loadingError: action.error
-            };
+            });
         case IMPORT_CREATED:
             return assign({}, state, {
                 selectedImport: action.import,
@@ -151,15 +152,12 @@ function importer(state = {}, action) {
                 selectedTransform: null
             });
         case IMPORTS_TASK_CREATED:
-            if (action.task || action.tasks && action.tasks.length === 1) {
+            if (action.importId === (state.selectedImport && state.selectedImport.id) ) {
                 return assign({}, state, {
-                    selectedTask: action.task || action.tasks[0] || null
+                    tasks: (state.tasks || []).append(action.tasks)
                 });
             }
-            return assign({}, state, {
-                tasks: action.tasks
-            });
-
+            return state;
         case IMPORTS_TASK_UPDATED:
             let selectedTask = state && state.selectedTask;
             if ( action.task && selectedTask && selectedTask.id === action.task.id) {

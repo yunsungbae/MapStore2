@@ -102,9 +102,10 @@ function importCreated(importObj) {
     };
 }
 
-function importTaskCreated(tasks) {
+function importTaskCreated(importId, tasks) {
     return {
         type: IMPORTS_TASK_CREATED,
+        importId: importId,
         tasks: tasks
     };
 }
@@ -514,7 +515,7 @@ function uploadImportFiles(geoserverRestURL, importId, files, presets) {
         API.uploadImportFiles(geoserverRestURL, importId, files, progressOpts).then((response) => {
             let tasks = response && response.data && response.data.tasks || response && response.data && [response.data.task];
             dispatch(fileUploaded(files));
-            dispatch(importTaskCreated(tasks));
+            dispatch(importTaskCreated(importId, tasks));
             let impState = getState().importer;
             if (impState && impState.selectedImport && impState.selectedImport.id === importId && tasks && tasks.length > 1) {
                 dispatch(loadImport(geoserverRestURL, importId));

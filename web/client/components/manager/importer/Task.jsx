@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {Grid, Col, Row, Panel, Label, Button} = require('react-bootstrap');
+const {Grid, Col, Row, Panel, Label, Button, Alert} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 const {DropdownList} = require('react-widgets');
+require('react-widgets/lib/less/react-widgets.less');
 const {Message} = require('../../I18N/I18N');
 const ImporterUtils = require('../../../utils/ImporterUtils');
 const Layer = require('./Layer');
@@ -29,7 +30,7 @@ const Task = React.createClass({
         return {
             task: {},
             panStyle: {
-                minHeight: "200px"
+                minHeight: "250px"
             },
             updateTask: () => {},
             deleteTask: () => {},
@@ -55,11 +56,19 @@ const Task = React.createClass({
             }
         }
     },
+    renderErrorMessage(task) {
+        if (task.errorMessage && task.state === "ERROR") {
+            return (
+                <Alert bsStyle="danger">{task.errorMessage}</Alert>);
+        }
+        return null;
+
+    },
     renderGeneral(task) {
         return (<Panel style={this.props.panStyle} bsStyle="info" header={<span><Message msgId="importer.task.general" /></span>}>
             <dl className="dl-horizontal">
               <dt><Message msgId="importer.task.status" /></dt>
-              <dd><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label></dd>
+              <dd><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderErrorMessage(task)}</dd>
               <dt><Message msgId="importer.task.updateMode" /></dt>
               <dd><DropdownList data={["APPEND", "CREATE", "REPLACE"]} value={task.updateMode} onChange={this.updateMode}/></dd>
             </dl>
@@ -102,8 +111,10 @@ const Task = React.createClass({
                     <Col lg={4} md={6} xs={12}>
                         {this.renderTargetPanel(this.props.task.target)}
                     </Col>
-                    <Col lg={4} md={6} xs={12}>
-                        <Layer panProps={{
+                    <Col lg={6} md={6} xs={12}>
+                        <Layer
+                            edit={this.props.task.state === "READY"}
+                            panProps={{
                             bsStyle: "info",
                             header: <span><Message msgId="importer.task.layer" />{this.renderLoading("layer")}</span>,
                             style: this.props.panStyle
@@ -111,7 +122,7 @@ const Task = React.createClass({
                             layer={this.props.task.layer}
                             updateLayer={this.props.updateLayer}/>
                     </Col>
-                    <Col lg={8} md={12}>
+                    <Col lg={6} md={12} xs={12}>
                         <TransformsGrid
                             panProps={{bsStyle: "info", style: this.props.panStyle }}
                             transforms={this.props.task.transformChain && this.props.task.transformChain.transforms}

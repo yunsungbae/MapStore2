@@ -14,12 +14,14 @@ const Layer = React.createClass({
     propTypes: {
         layer: React.PropTypes.object,
         loading: React.PropTypes.bool,
+        edit: React.PropTypes.bool,
         panProps: React.PropTypes.object,
         updateLayer: React.PropTypes.func
     },
     getDefaultProps() {
         return {
             layer: {},
+            edit: true,
             loading: false,
             updateLayer: () => {}
         };
@@ -33,12 +35,14 @@ const Layer = React.createClass({
         this.setState(state);
     },
     renderInput(name) {
-        return [ <dt key={"title-" + name}>{name}</dt>,
+        return [ <dt style={{marginBottom: "10px"}} key={"title-" + name}>{name}</dt>,
          (<dd>
              <input
+                 disabled={!this.props.edit}
                  name={name}
                  key={name}
                  type="text"
+                 style={{width: "100%"}}
                  onChange={this.onChange}
                  value={this.state[name] !== undefined ? this.state[name] : this.props.layer[name]}
                  />

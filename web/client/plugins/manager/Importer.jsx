@@ -34,7 +34,7 @@ const ImporterPlugin = connect(
             selectedImport: state.importer && state.importer.selectedImport,
             selectedTask: state.importer && state.importer.selectedTask,
             selectedTransform: state.importer && state.importer.selectedTransform,
-            error: state.importer && state.importer.error
+            error: state.importer && state.importer.loadingError
     }; },
     (dispatch, ownProps) => {
         return assign({
