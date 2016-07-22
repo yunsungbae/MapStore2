@@ -70,7 +70,7 @@ const Task = React.createClass({
               <dt><Message msgId="importer.task.status" /></dt>
               <dd><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderErrorMessage(task)}</dd>
               <dt><Message msgId="importer.task.updateMode" /></dt>
-              <dd><DropdownList data={["APPEND", "CREATE", "REPLACE"]} value={task.updateMode} onChange={this.updateMode}/></dd>
+              <dd>{this.props.task.state === "READY" ? <DropdownList data={["APPEND", "CREATE", "REPLACE"]} value={task.updateMode} onChange={this.updateMode}/> : task.updateMode}</dd>
             </dl>
         </Panel>);
     },

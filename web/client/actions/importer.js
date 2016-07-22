@@ -32,6 +32,7 @@ const IMPORTS_UPLOAD_PROGRESS = 'IMPORTS_UPLOAD_PROGRESS';
 
 const IMPORTS_LIST_LOADED = 'IMPORTS_LIST_LOADED';
 const IMPORTS_LIST_LOAD_ERROR = 'IMPORTS_LIST_LOAD_ERROR';
+const TASK_PROGRESS_UPDATED = 'TASK_PROGRESS_UPDATED';
 
 const IMPORT_LOADED = 'IMPORT_LOADED';
 const IMPORT_LOAD_ERROR = 'IMPORT_LOAD_ERROR';
@@ -213,6 +214,14 @@ function layerUpdated(importId, taskId, layer) {
         layer
     };
 }
+function taskProgressUpdated(importId, taskId, info) {
+    return {
+        type: TASK_PROGRESS_UPDATED,
+        importId,
+        taskId,
+        info
+    };
+}
 /** TRANSFORMS **/
 function transformLoaded(importId, taskId, transformId, transform) {
     return {
@@ -324,11 +333,13 @@ function runImport(geoserverRestURL, importId) {
         API.runImport(geoserverRestURL, importId).then(() => {
             dispatch(importRunSuccess(importId));
             if (getState && getState().selectedImport && getState().selectedImport.id === importId) {
-                loadImport(geoserverRestURL, importId);
                 dispatch(loading({importId}, false));
+                dispatch(loadImport(geoserverRestURL, importId));
+
             } else {
-                loadImports(geoserverRestURL);
                 dispatch(loading({importId}, false));
+                dispatch(loadImports(geoserverRestURL));
+
             }
         }).catch((e) => {importRunError(importId, e); });
     };
@@ -411,6 +422,13 @@ function deleteTask(geoserverRestURL, importId, taskId) {
     };
 }
 
+function updateProgress(geoserverRestURL, importId, taskId) {
+    return (dispatch) => {
+        return API.getTaskProgress(geoserverRestURL, importId, taskId).then((response) => {
+            dispatch(taskProgressUpdated(importId, taskId, response.data));
+        });
+    };
+}
 /** TRANFORMS **/
 function loadTransform(geoserverRestURL, importId, taskId, transformId) {
     return (dispatch) => {
@@ -523,9 +541,10 @@ function uploadImportFiles(geoserverRestURL, importId, files, presets) {
             if (presets) {
                 dispatch(applyPresets(geoserverRestURL, importId, tasks, presets));
             }
-
+            dispatch(loading({importId: importId}, false));
         }).catch((e) => {
             dispatch(importTaskCreationError(e));
+            dispatch(loading({importId: importId}, false));
         });
     };
 }
@@ -534,6 +553,7 @@ module.exports = {
     loadImports, createImport, uploadImportFiles,
     loadImport, runImport, deleteImport,
     updateTask, deleteTask, loadTask,
+    updateProgress,
     loadLayer, updateLayer,
     loadTransform, updateTransform, deleteTransform,
     IMPORTS_LOADING,
@@ -548,6 +568,7 @@ module.exports = {
     IMPORTS_TASK_CREATION_ERROR,
     IMPORTS_TASK_LOADED,
     IMPORTS_TASK_UPDATED,
+    TASK_PROGRESS_UPDATED,
     LAYER_LOADED,
     LAYER_UPDATED,
     IMPORTS_TRANSFORM_LOAD,

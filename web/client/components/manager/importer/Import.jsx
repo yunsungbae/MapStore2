@@ -8,25 +8,46 @@
 const React = require('react');
 const Spinner = require('react-spinkit');
 const Message = require('../../I18N/Message');
+const TaskProgress = require('./TaskProgress');
 const ImporterUtils = require('../../../utils/ImporterUtils');
 const {Grid, Row, Panel, Label, Table, Button, Glyphicon} = require('react-bootstrap');
 
 const Task = React.createClass({
     propTypes: {
+        timeout: React.PropTypes.number,
         "import": React.PropTypes.object,
+        loadImport: React.PropTypes.func,
         loadTask: React.PropTypes.func,
         runImport: React.PropTypes.func,
+        updateProgress: React.PropTypes.func,
         deleteImport: React.PropTypes.func,
         deleteTask: React.PropTypes.func
     },
     getDefaultProps() {
         return {
+            timeout: 10000,
             "import": {},
             loadTask: () => {},
             runImport: () => {},
+            loadImport: () => {},
+            updateProgress: () => {},
             deleteImport: () => {},
             deleteTask: () => {}
         };
+    },
+    componentDidMount() {
+        if (this.props.import.state === "RUNNING") {
+            // Check if some task is running the update is not needed
+            if ( this.props.import.tasks && !(this.props.import.tasks.findIndex((task) => task.state === "RUNNING") >= 0)) {
+                this.interval = setInterval(this.props.loadImport.bind(null, this.props.import.id), this.props.timeout);
+            }
+
+        }
+    },
+    componentWillUnmount() {
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
     },
     getbsStyleForState(state) {
         return ImporterUtils.getbsStyleForState(state);
@@ -39,11 +60,16 @@ const Task = React.createClass({
               <dd>{importObj.archive}</dd>
             </dl>);
     },
+    renderProgressTask(task) {
+        if ( task.state === "RUNNING") {
+            return <TaskProgress progress={task.progress} total={task.total} state={task.state} update={this.props.updateProgress.bind(null, this.props.import.id, task.id)} />;
+        }
+    },
     renderTask(task) {
 
         return (<tr key={task && task.id}>
             <td><a onClick={(e) => {e.preventDefault(); this.props.loadTask(task.id); }} >{task.id}</a></td>
-            <td><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderLoadingTask(task)}</td>
+            <td><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderProgressTask(task)}{this.renderLoadingTask(task)}</td>
             <td key="actions">
                 <Button bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteTask(this.props.import.id, task.id); }}>
                     <Glyphicon glyph="remove"/>
@@ -59,7 +85,7 @@ const Task = React.createClass({
     },
     renderLoadingMessage(task) {
         switch (task.message) {
-            case "applyPreset":
+            case "applyPresets":
                 return <Message msgId="importer.import.applyingPreset"/>;
             case "deleting":
                 return <Message msgId="importer.import.deleting" />;

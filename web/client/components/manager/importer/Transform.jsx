@@ -11,7 +11,7 @@ const {Panel} = require('react-bootstrap');
 // const {DropdownList} = require('react-widgets');
 const {Message} = require('../../I18N/I18N');
 const transforms = require('./transforms');
-const Task = React.createClass({
+const Transform = React.createClass({
     propTypes: {
         transform: React.PropTypes.object,
         updateTransform: React.PropTypes.func
@@ -24,8 +24,8 @@ const Task = React.createClass({
     },
     renderTransformOptions() {
         if (transforms[this.props.transform.type]) {
-            let Transform = transforms[this.props.transform.type];
-            return <Transform transform={this.props.transform} updateTransform={this.props.updateTransform} />;
+            let TransformEl = transforms[this.props.transform.type];
+            return <TransformEl transform={this.props.transform} updateTransform={this.props.updateTransform} />;
         }
         return null;
     },
@@ -38,4 +38,4 @@ const Task = React.createClass({
         );
     }
 });
-module.exports = Task;
+module.exports = Transform;

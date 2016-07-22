@@ -32,6 +32,7 @@ const Importer = React.createClass({
         deleteTask: React.PropTypes.func,
         loadImport: React.PropTypes.func,
         loadTask: React.PropTypes.func,
+        updateProgress: React.PropTypes.func,
         loadLayer: React.PropTypes.func,
         updateLayer: React.PropTypes.func,
         loadTransform: React.PropTypes.func,
@@ -51,6 +52,7 @@ const Importer = React.createClass({
             loadTask: () => {},
             loadLayer: () => {},
             loadTransform: () => {},
+            updateProgress: () => {},
             deleteTransform: () => {},
             uploadImportFiles: () => {},
             onMount: () => {},
@@ -129,6 +131,8 @@ const Importer = React.createClass({
                     import={this.props.selectedImport}
                     loadTask={this.props.loadTask.bind(null, this.props.selectedImport.id)}
                     runImport={this.props.runImport}
+                    loadImport={this.props.loadImport}
+                    updateProgress={this.props.updateProgress}
                     deleteTask={this.props.deleteTask}
                     deleteImport={this.props.deleteImport}
                      />

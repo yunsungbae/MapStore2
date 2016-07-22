@@ -39,6 +39,10 @@ var Api = {
         let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId;
         return axios.get(url, options);
     },
+    getTaskProgress: function( geoserverBaseUrl, importId, taskId, options) {
+        let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/progress";
+        return axios.get(url, options);
+    },
     loadLayer: function( geoserverBaseUrl, importId, taskId, options) {
         let url = geoserverBaseUrl + "imports/" + importId + "/tasks/" + taskId + "/layer";
         return axios.get(url, options);
