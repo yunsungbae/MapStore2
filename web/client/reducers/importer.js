@@ -20,6 +20,7 @@ const {
     IMPORTS_TASK_LOADED,
     IMPORTS_TASK_UPDATED,
     IMPORTS_TASK_DELETE,
+    TASK_PROGRESS_UPDATED,
     LAYER_LOADED,
     LAYER_UPDATED,
     IMPORTS_TRANSFORM_LOAD,
@@ -85,7 +86,7 @@ function updateImportTaskLoadingStatus(state, action, loading = true) {
             element: action.details && action.details.element
         });
         // update selected task
-        if (selectedImport && selectedImport.tasks && newTask && newTask.id) {
+        if (selectedImport && selectedImport.tasks && newTask) {
             selectedImport = assign({}, selectedImport);
             selectedImport.tasks = updateArray(selectedImport.tasks, newTask);
         }
@@ -133,6 +134,7 @@ function importer(state = {}, action) {
                 return updateImportTaskLoadingStatus(state, action, action.loading);
             }
         }
+        return state;
         case IMPORTS_LIST_LOADED:
             return assign({}, state, {
                 loadingError: null,
@@ -153,12 +155,13 @@ function importer(state = {}, action) {
             });
         case IMPORTS_TASK_CREATED:
             if (action.importId === (state.selectedImport && state.selectedImport.id) ) {
-                return assign({}, state, {
-                    tasks: (state.tasks || []).append(action.tasks)
+                let selectedImport = assign({}, state.selectedImport, {
+                    tasks: [...(state.selectedImport.tasks || []), ...action.tasks]
                 });
+                return assign({}, state, {selectedImport});
             }
             return state;
-        case IMPORTS_TASK_UPDATED:
+        case IMPORTS_TASK_UPDATED: {
             let selectedTask = state && state.selectedTask;
             if ( action.task && selectedTask && selectedTask.id === action.task.id) {
                 selectedTask = action.task;
@@ -175,16 +178,38 @@ function importer(state = {}, action) {
                 selectedTask,
                 tasks
             });
+        }
         case IMPORTS_TASK_CREATION_ERROR: {
             return assign({}, state, {
                 uploading: false,
                 error: action.error
             });
         }
+        case TASK_PROGRESS_UPDATED: {
+            let selectedTask = state.selectedTask;
+            let selectedImport = state.selectedImport;
+            let tasks = selectedImport && selectedImport.tasks;
+            if (selectedTask && (selectedTask.id === action.taskId)) {
+                selectedTask = assign({}, selectedTask, action.info);
+            }
+            if (selectedImport && (selectedImport.id === action.importId)) {
+
+                let index = tasks.findIndex((task) => task.id === action.taskId);
+                if (index >= 0) {
+                    tasks = tasks.concat();
+                    tasks[index] = assign({}, tasks[index], action.info);
+                    selectedImport = assign({}, selectedImport, {tasks: tasks});
+                }
+            }
+            return assign({}, state, {
+                selectedTask,
+                selectedImport
+            });
+        }
         case LAYER_LOADED: {
             let task = state.selectedTask;
             let importObj = state.selectedImport;
-            if ( importObj && task && importObj.id === action.importId && task.id === action.taskId) {
+            if ( importObj && task && (importObj.id === action.importId) && (task.id === action.taskId)) {
                 task = assign({}, task, {
                     layer: action.layer
                 });

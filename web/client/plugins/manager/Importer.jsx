@@ -15,6 +15,7 @@ const {
     loadImports,
     createImport, loadImport, runImport, deleteImport,
     uploadImportFiles, loadTask, updateTask, deleteTask,
+    updateProgress,
     loadLayer, updateLayer,
     loadTransform, deleteTransform
 } = require('../../actions/importer');
@@ -49,6 +50,7 @@ const ImporterPlugin = connect(
             createImport: createImport.bind(null, getURL(ownProps)),
             uploadImportFiles: uploadImportFiles.bind(null, getURL(ownProps) ),
             updateTask: updateTask.bind(null, getURL(ownProps)),
+            updateProgress: updateProgress.bind(null, getURL(ownProps)),
             loadImport: loadImport.bind(null, getURL(ownProps)),
             runImport: runImport.bind(null, getURL(ownProps)),
             loadTask: loadTask.bind(null, getURL(ownProps)),
@@ -68,7 +70,7 @@ module.exports = {
             id: "importer",
             name: 'importer',
             position: 1,
-            title: 'Importer'
+            title: 'Import Data'
         }
     }),
     reducers: {importer: require('../../reducers/importer')}
