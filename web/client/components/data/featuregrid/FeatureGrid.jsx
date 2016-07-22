@@ -19,6 +19,7 @@ const CoordinateUtils = require('../../../utils/CoordinatesUtils');
 const img = require('./images/magnifier.png');
 
 const I18N = require('../../I18N/I18N');
+const LocaleUtils = require('../../../utils/LocaleUtils');
 
 require("ag-grid/dist/styles/ag-grid.css");
 require("ag-grid/dist/styles/theme-fresh.css");
@@ -44,7 +45,11 @@ const FeatureGrid = React.createClass({
         srs: React.PropTypes.string,
         maxZoom: React.PropTypes.number,
         zoom: React.PropTypes.number,
-        toolbar: React.PropTypes.object
+        toolbar: React.PropTypes.object,
+        dataSource: React.PropTypes.object
+    },
+    contextTypes: {
+        messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -73,7 +78,8 @@ const FeatureGrid = React.createClass({
                 exporter: true,
                 toolPanel: true,
                 selectAll: true
-            }
+            },
+            dataSource: null
         };
     },
     shouldComponentUpdate(nextProps) {
@@ -131,9 +137,14 @@ const FeatureGrid = React.createClass({
         }
 
         if (this.props.toolbar.selectAll) {
-            tools.push(<button key="allrowsselection" onClick={() => { this.selectAllRows(this.props.select.length < this.props.features.length); }}>
+            let nOfFeatures = this.props.features.length;
+            if (this.props.paging && this.api) {
+                nOfFeatures = 0;
+                this.api.forEachNode(() => {nOfFeatures++; });
+            }
+            tools.push(<button key="allrowsselection" onClick={() => { this.selectAllRows(this.props.select.length < nOfFeatures); }}>
                 {
-                    this.props.select.length < this.props.features.length ? (
+                    this.props.select.length < nOfFeatures ? (
                         <I18N.Message msgId={"featuregrid.selectall"}/>
                     ) : (
                         <I18N.Message msgId={"featuregrid.deselectall"}/>
@@ -161,6 +172,9 @@ const FeatureGrid = React.createClass({
                     showToolPanel={false}
                     rowDeselection={true}
                     localeText={{
+                        page: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.page") || 'Page',
+                        of: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.of") || 'of',
+                        to: LocaleUtils.getMessageById(this.context.messages, "featuregrid.pagination.to") || 'to',
                         next: '>',
                         last: '>|',
                         first: '|<',
@@ -202,7 +216,7 @@ const FeatureGrid = React.createClass({
     },
     // Generate datasource for pagination or virtual paging and infinite scrolling
     setDataSource() {
-        return {
+        return (this.props.dataSource) ? this.props.dataSource : {
             rowCount: (isFunction(this.props.features)) ? -1 : this.props.features.length,
             getRows: (isFunction(this.props.features)) ? this.props.features : this.getRows,
             pageSize: this.props.pageSize,
@@ -328,7 +342,6 @@ const FeatureGrid = React.createClass({
             }else if (me.api.isNodeSelected(n)) {
                 me.suppresSelectionEvent = true;
                 me.api.deselectNode(n);
-
             }
         });
     }

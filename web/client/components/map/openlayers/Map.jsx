@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -168,6 +168,14 @@ var OpenlayersMap = React.createClass({
             this.setMousePointer(newProps.mousePointer);
         }
 
+        if (newProps.zoomControl !== this.props.zoomControl) {
+            if (newProps.zoomControl) {
+                this.map.addControl(new ol.control.Zoom());
+            } else {
+                this.map.removeControl(this.map.getControls().getArray().filter((ctl) => ctl instanceof ol.control.Zoom)[0]);
+            }
+        }
+
         if (this.map && this.props.id !== newProps.mapStateSource) {
             this._updateMapPositionFromNewProps(newProps);
         }
@@ -314,6 +322,9 @@ var OpenlayersMap = React.createClass({
     registerHooks() {
         mapUtils.registerHook(mapUtils.RESOLUTIONS_HOOK, () => {
             return this.getResolutions();
+        });
+        mapUtils.registerHook(mapUtils.RESOLUTION_HOOK, () => {
+            return this.map.getView().getResolution();
         });
         mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
             var olCenter = CoordinatesUtils.reproject([center.x, center.y], 'EPSG:4326', this.props.projection);

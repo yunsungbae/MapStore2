@@ -36,11 +36,13 @@ const Identify = React.createClass({
         queryableLayersFilter: React.PropTypes.func,
         buildRequest: React.PropTypes.func,
         sendRequest: React.PropTypes.func,
+        localRequest: React.PropTypes.func,
         showMarker: React.PropTypes.func,
         hideMarker: React.PropTypes.func,
         changeMousePointer: React.PropTypes.func,
         maxItems: React.PropTypes.number,
         excludeParams: React.PropTypes.array,
+        excludeOptions: React.PropTypes.array,
         showRevGeocode: React.PropTypes.func,
         hideRevGeocode: React.PropTypes.func,
         showModalReverse: React.PropTypes.bool,
@@ -66,6 +68,7 @@ const Identify = React.createClass({
             viewer: DefaultViewer,
             purgeResults: () => {},
             buildRequest: MapInfoUtils.buildIdentifyRequest,
+            localRequest: () => {},
             sendRequest: () => {},
             showMarker: () => {},
             hideMarker: () => {},
@@ -90,6 +93,7 @@ const Identify = React.createClass({
             layers: [],
             maxItems: 10,
             excludeParams: ["SLD_BODY"],
+            excludeOptions: [],
             panelClassName: "panel default-panel",
             headerClassName: "panel-heading",
             bodyClassName: "panel-body",
@@ -104,7 +108,12 @@ const Identify = React.createClass({
             const queryableLayers = newProps.layers.filter(newProps.queryableLayersFilter);
             queryableLayers.forEach((layer) => {
                 const {url, request, metadata} = this.props.buildRequest(layer, newProps);
-                this.props.sendRequest(url, request, metadata, this.filterRequestParams(layer));
+                if (url) {
+                    this.props.sendRequest(url, request, metadata, this.filterRequestParams(layer));
+                } else {
+                    this.props.localRequest(layer, request, metadata);
+                }
+
             });
             this.props.showMarker();
         }
@@ -208,26 +217,23 @@ const Identify = React.createClass({
         }
         return false;
     },
-    filterRequestParams(layer) {
-        let options = layer;
-        let excludeList = this.props.excludeParams;
-        if (layer.params && excludeList && excludeList.length > 0) {
-            options = Object.keys(layer).reduce((op, next) => {
-                if (next !== "params") {
-                    op[next] = layer[next];
-                }else {
-                    let params = layer[next];
-                    op[next] = Object.keys(params).reduce((pr, n) => {
-                        if (excludeList.findIndex((el) => {return (el === n); }) === -1) {
-                            pr[n] = params[n];
-                        }
-                        return pr;
-                    }, {});
-                }
-                return op;
-            }, {});
-
-        }
+   filterRequestParams(layer) {
+        let excludeOpt = this.props.excludeOptions || [];
+        let excludeList = this.props.excludeParams || [];
+        let options = Object.keys(layer).reduce((op, next) => {
+            if (next !== "params" && excludeOpt.indexOf(next) === -1) {
+                op[next] = layer[next];
+            }else if (next === "params" && excludeList.length > 0) {
+                let params = layer[next];
+                op[next] = Object.keys(params).reduce((pr, n) => {
+                    if (excludeList.findIndex((el) => {return (el === n); }) === -1) {
+                        pr[n] = params[n];
+                    }
+                    return pr;
+                }, {});
+            }
+            return op;
+        }, {});
         return options;
     }
 });

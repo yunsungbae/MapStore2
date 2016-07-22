@@ -16,7 +16,7 @@ let Feature = React.createClass({
         properties: React.PropTypes.object,
         container: React.PropTypes.object, // TODO it must be a ol.layer.vector (maybe pass the source is more correct here?)
         geometry: React.PropTypes.object, // TODO check for geojson format for geometry
-        msId: React.PropTypes.string
+        msId: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
     },
     componentDidMount() {
         const format = new ol.format.GeoJSON();
@@ -54,8 +54,13 @@ let Feature = React.createClass({
         if (this._feature) {
             if (Array.isArray(this._feature)) {
                 const layersSource = this.props.container.getSource();
-                this._feature.forEach((feature) => {
-                    layersSource.removeFeature(layersSource.getFeatureById(feature.getId()));
+                this._feature.map((feature) => {
+                    let fetureId = feature.getId();
+                    if (fetureId === undefined) {
+                        layersSource.removeFeature(feature);
+                    }else {
+                        layersSource.removeFeature(layersSource.getFeatureById(fetureId));
+                    }
                 });
             } else {
                 this.props.container.getSource().removeFeature(this._feature);
