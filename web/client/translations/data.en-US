@@ -19,7 +19,15 @@
         "about_h21": "Credits",
         "about_p6": "MapStore2 is made by:",
         "layers": "Layers",
-        "layerProperties": "Layer Properties",
+        "layerProperties": {
+            "windowTitle": "Layer Properties",
+            "title": "Title",
+            "name": "Name",
+            "general": "General",
+            "display": "Display",
+            "style": "Style",
+            "format": "Format"
+        },
         "enable": "Enable",
         "background": "Background",
         "language": "Language",
@@ -101,7 +109,7 @@
             "description": "Description",
             "namePlaceholder": "Map Name",
             "descriptionPlaceholder": "Map Description",
-            "saveTitle": "Save map",
+            "saveTitle": "Save Map",
             "saveText": "Save current map?"
         },
         "print":{
