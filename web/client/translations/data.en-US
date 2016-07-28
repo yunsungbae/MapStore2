@@ -35,6 +35,7 @@
         "save": "Save",
         "opacity": "Opacity",
         "close": "Close",
+        "cancel": "Cancel",
         "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
         "home":{
             "open": "Open",
@@ -87,12 +88,21 @@
         },
         "manager": {
             "openInANewTab":"Open map",
+            "deleteMap":"Delete Map",
+            "deleteMapMessage": "Do you really want to delete this map?",
+            "editMapMetadata":"Edit Map Metadata",
             "mapTypes_combo": "Select Map Viewer: ",
             "maps_title": "Maps",
             "locales_combo": "Language:"
         },
         "map": {
-            "loading": "Loading..."
+            "loading": "Loading...",
+            "name": "Name",
+            "description": "Description",
+            "namePlaceholder": "Map Name",
+            "descriptionPlaceholder": "Map Description",
+            "saveTitle": "Save map",
+            "saveText": "Save current map?"
         },
         "print":{
             "paneltitle": "Print",
@@ -291,7 +301,9 @@
             "rasterstyler": "Define min value, max value, number of classes and color ramp and generate new classified raster layer",
             "expandToolbar": "This is the helptext for Expand / Collapse",
             "historyundo": "Use this button to go to the previous map zoom and location",
-            "historyredo": "Use this button to go to the next map zoom and location"
+            "historyredo": "Use this button to go to the next map zoom and location",
+            "vectorstyler": "Add rule, and generate new styled vector layer",
+            "styler": "Add rule, and generate new styled layer"
         },
         "queryform": {
             "query": "Search",
@@ -355,6 +367,22 @@
                     "dwithin": "DWITHIN",
                     "within": "WITHIN"
                 }
+            }
+        },
+        "user":{
+            "login": "Login",
+            "logout": "Logout",
+            "info": " Account Info",
+            "changePwd": "Change Password",
+            "newPwd": "New Password",
+            "retypePwd": "Retype Password",
+            "username": "Username",
+            "password": "Password",
+            "signIn":"Sign-in",
+            "loginFail":"Login Fail",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Please insert username and password",
+                "usernamePwdIncorrect":"Username or password incorrect"
             }
         },
         "share":{
@@ -514,6 +542,7 @@
             "multi": "Multi Band",
             "single": "Single Band"
         },
+
         "featuregrid": {
             "header": "Search results list",
             "tools": "Tool Panel",
@@ -525,6 +554,39 @@
                 "of":   "of",
                 "to":   "to"
             }
+        },
+        "vectorstyler": {
+            "tooltip": "Create and edit vector layer style",
+            "paneltitle": "Vector Styler",
+            "layerlabel": "Layer",
+            "rulelabel": "Rules",
+            "namelabel": "Rule Name",
+            "symboltitle": "Symbol",
+            "labeltitle": "Label",
+            "conditiontitle": "Conditions",
+            "applybtn": "Apply Style",
+            "addrulebtn": "Add Rule",
+            "removerulebtn": "Remove Rule"
+        },
+        "scaledenominator": {
+            "minlabel": "Min Scale Denominator",
+            "maxlabel": "Max Scale Denominator",
+            "maxerror": "Max value should be greater then min value",
+            "minerror": "Min value should be less then max value",
+            "none": "None"
+        },
+        "markNameSelector": {
+            "circle": "Circle",
+            "square": "Square",
+            "triangle": "Triangle",
+            "star": "Star",
+            "cross": "Cross",
+            "x": "X"
+        },
+        "styler": {
+            "tooltip": "Create and edit layer style",
+            "paneltitle": "Styler",
+            "layerlabel": "Layer"
         }
     }
 }

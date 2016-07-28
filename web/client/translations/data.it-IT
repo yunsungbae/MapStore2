@@ -35,6 +35,7 @@
         "save": "Salva",
         "opacity": "Opacità",
         "close": "Chiudi",
+        "cancel": "Annulla",
         "pageInfo": "{total, plural, =0 {Nessun Elemento} =1 {{total} Elemento di {total}} other {Elementi {start}-{end} di {total}}}",
         "home":{
             "open": "Apri",
@@ -87,12 +88,21 @@
         },
         "manager": {
             "openInANewTab":"Apri mappa",
+            "deleteMap":"Elimina Mappa",
+            "deleteMapMessage": "Vuoi eliminare questa mappa?",
+            "editMapMetadata":"Modifica Metadati",
             "mapTypes_combo": "Seleziona il visualizzatore di mappa:",
             "maps_title": "Mappe",
             "locales_combo": "Lingua:"
         },
         "map": {
-            "loading": "In caricamento..."
+            "loading": "In caricamento...",
+            "name": "Nome",
+            "description": "Descrizione",
+            "namePlaceholder": "Nome Mappa",
+            "descriptionPlaceholder": "Descrizione Mappa",
+            "saveTitle": "Salva mappa",
+            "saveText": "Salvare la mappa corrente?"
         },
         "print":{
             "paneltitle": "Stampa",
@@ -292,7 +302,9 @@
             "rasterstyler": "Imposta min, max, numero delle classi e colorRamp e genera una nuova classificazione per il raster layer selezionato",
             "expandToolbar": "Questo è il testo di aiuto per Espandi / Collassa",
             "historyundo": "Usa questo pulsante per tornare alla vista della mappa precedente",
-            "historyredo": "Use questo pulsante per andare alla vista della mappa successiva"
+            "historyredo": "Use questo pulsante per andare alla vista della mappa successiva",
+            "vectorstyler": "Crea lo style per il layer vettoriale selezionato",
+            "styler": "Crea lo style per il layer selezionato"
         },
         "queryform": {
             "query": "Ricerca",
@@ -356,6 +368,22 @@
                     "dwithin": "DWITHIN",
                     "within": "WITHIN"
                 }
+            }
+        },
+        "user":{
+            "login": "Login",
+            "logout": "Logout",
+            "info": " Informazioni Account",
+            "changePwd": "Cambia Password",
+            "newPwd": "Nuova Password",
+            "retypePwd": "Conferma Password",
+            "username": "Username",
+            "password": "Password",
+            "signIn":"Accedi",
+            "loginFail":"Login Fallito",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Per favore, Inserisci username e password",
+                "usernamePwdIncorrect":"Username o password non corretti"
             }
         },
         "share":{
@@ -519,6 +547,39 @@
                 "of":   "di",
                 "to":   "a"
             }
+        },
+        "vectorstyler": {
+            "tooltip": "Crea e modifica lo stile dei layer vettoriali",
+            "paneltitle": "Vector Styler",
+            "layerlabel": "Layer",
+            "rulelabel": "Rules",
+            "namelabel": "Nome Rule",
+            "symboltitle": "Simbolo",
+            "labeltitle": "Etichetta",
+            "conditiontitle": "Condizioni",
+            "applybtn": "Aggiorna Stile",
+            "addrulebtn": "Aggiungi Rule",
+            "removerulebtn": "Elimina Rule"
+        },
+        "scaledenominator": {
+            "minlabel": "Min Scale Denominator",
+            "maxlabel": "Max Scale Denominator",
+            "maxerror": "Il massimo deve essere maggiore del minimo",
+            "minerror": "Il minimo deve essere minore del massimo",
+            "none": "Ignora"
+        },
+        "markNameSelector": {
+            "circle": "Ciroconferenza",
+            "square": "Quadrato",
+            "triangle": "Triangolo",
+            "star": "Stella",
+            "cross": "Croce",
+            "x": "X"
+        },
+        "styler": {
+            "tooltip": "Crea e modifica lo stile dei layer",
+            "paneltitle": "Styler",
+            "layerlabel": "Layer"
         }
     }
 }
