@@ -23,7 +23,7 @@ const Manager = React.createClass({
         return {
             items: [],
             mapType: "openlayers",
-            selectedTool: "importer"
+            selectedTool: "security"
         };
     },
     renderNavItems() {

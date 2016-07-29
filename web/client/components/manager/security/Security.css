@@ -1,0 +1,29 @@
+.modal-container .Select {
+    margin-top: 15px;
+
+}
+
+.filters-container .Select {
+    padding: 5px 10px 5px 5px;
+}
+
+.modal-container .Select:first-child {
+    margin-top: 0;
+}
+
+.rules-container .rules-buttons {
+    text-align: right;
+    margin-right: 11px;
+}
+
+.rules-container button {
+    margin-left: 2px;
+    margin-bottom: 10px;
+}
+
+.rules-container .rules-pagination {
+    margin-top: -5px;
+    text-align: right;
+    margin-right: 11px;
+    margin-bottom: -18px;
+}
