@@ -12,6 +12,7 @@ const { RULES_SELECTED, RULES_LOADED, RULES_TABLE_ERROR } = require('../actions/
 const _ = require('lodash');
 
 function rulesmanager(state = {}, action) {
+    console.log("rules.manager");
     switch (action.type) {
         case RULES_SELECTED: {
             if (action.merge) {

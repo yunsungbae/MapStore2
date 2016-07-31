@@ -34,13 +34,9 @@ const RulesTable = React.createClass({
             moveRules: () => []
         };
     },
-    locale(messageId) {
-        return LocaleUtils.getMessageById(
-            this.context.messages, "securityRulesManager." + messageId);
-    },
     render() {
         const allChecked = this.props.selectedRules.length === 10;
-        return this.renderWithSortable(
+        return (
             <Table striped bordered condensed hover>
                 <thead>
                     <tr>
@@ -51,13 +47,13 @@ const RulesTable = React.createClass({
                                 onChange={() => this.props.onSelectRules(
                                     this.props.selectedRules, false, allChecked)}/>
                         </th>
-                        <th>this.locale("group")</th>
-                        <th>this.locale("user")</th>
-                        <th>this.locale("service")</th>
-                        <th>this.locale("request")</th>
-                        <th>this.locale("workspace")</th>
-                        <th>this.locale("layer")</th>
-                        <th>this.locale("access")</th>
+                        <th>{this.locale("group")}</th>
+                        <th>{this.locale("user")}</th>
+                        <th>{this.locale("service")}</th>
+                        <th>{this.locale("request")}</th>
+                        <th>{this.locale("workspace")}</th>
+                        <th>{this.locale("layer")}</th>
+                        <th>{this.locale("access")}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,6 +70,10 @@ const RulesTable = React.createClass({
                 </tbody>
             </Table>
         );
+    },
+    locale(messageId) {
+        return LocaleUtils.getMessageById(
+            this.context.messages, "rulesmanager." + messageId);
     },
     handleSort(sorted) {
         return function() {

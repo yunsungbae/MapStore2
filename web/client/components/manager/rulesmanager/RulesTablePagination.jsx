@@ -24,7 +24,7 @@ const RulesTablePagination = React.createClass({
     },
     render() {
         const numberOfPages = Math.ceil(this.props.rulesCount / 10);
-        return this.renderWithSortable(
+        return (
             <Pagination bsSize="small" prev next first last ellipsis boundaryLinks
                 items={numberOfPages}
                 maxButtons={3}

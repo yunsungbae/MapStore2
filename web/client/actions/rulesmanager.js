@@ -11,7 +11,7 @@ const GeoServerAPI = require('../api/GeoServerDAO');
 const axios = require('../libs/ajax');
 
 const RULES_SELECTED = 'RULES_SELECTED';
-const RULES_LOADED = 'RULES_SELECTED';
+const RULES_LOADED = 'RULES_LOADED';
 const RULES_TABLE_ERROR = 'RULES_TABLE_ERROR';
 
 function rulesSelected(rules, merge, unselect) {
@@ -25,7 +25,7 @@ function rulesSelected(rules, merge, unselect) {
 
 function rulesLoaded(rules, count, page) {
     return {
-        type: RULES_SELECTED,
+        type: RULES_LOADED,
         rules: rules,
         count: count,
         page: page
@@ -66,6 +66,7 @@ module.exports = {
     RULES_SELECTED,
     RULES_LOADED,
     RULES_TABLE_ERROR,
+    rulesLoaded,
     rulesSelected,
     loadRules,
     moveRules

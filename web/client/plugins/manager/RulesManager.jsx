@@ -43,8 +43,8 @@ module.exports = {
             id: "rulesmanager",
             name: 'rulesmanager',
             position: 2,
-            title: 'Security Rules Manager'
+            title: 'Rules Manager'
         }
     }),
-    reducers: {importer: require('../../reducers/rulesmanager')}
+    reducers: {rulesmanager: require('../../reducers/rulesmanager')}
 };

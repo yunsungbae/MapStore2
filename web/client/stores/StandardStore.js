@@ -29,6 +29,7 @@ module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {
         locale: require('../reducers/locale'),
         browser: require('../reducers/browser'),
         controls: require('../reducers/controls'),
+        rulesmanager: require('../reducers/rulesmanager'),
         help: require('../reducers/help'),
         map: () => {return null; },
         mapInitialConfig: () => {return null; },
