@@ -8,8 +8,10 @@
 
 const React = require('react');
 const Metadata = require('../forms/Metadata');
+const Thumbnail = require('../forms/Thumbnail');
+require('./css/modals.css');
 
-const {Modal, Button, Glyphicon} = require('react-bootstrap');
+const {Modal, Button, Glyphicon, Grid, Row, Col} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 
 const Dialog = require('../../../components/misc/Dialog');
@@ -24,26 +26,33 @@ const LocaleUtils = require('../../../utils/LocaleUtils');
 const MetadataModal = React.createClass({
     propTypes: {
         // props
+        id: React.PropTypes.string,
         user: React.PropTypes.object,
         authHeader: React.PropTypes.string,
         show: React.PropTypes.bool,
         options: React.PropTypes.object,
         onMetadataEdit: React.PropTypes.func,
+        onCreateThumbnail: React.PropTypes.func,
+        onDeleteThumbnail: React.PropTypes.func,
         onMetadataEdited: React.PropTypes.func,
         onClose: React.PropTypes.func,
         useModal: React.PropTypes.bool,
         closeGlyph: React.PropTypes.string,
-        style: React.PropTypes.object,
         buttonSize: React.PropTypes.string,
         includeCloseButton: React.PropTypes.bool,
-        map: React.PropTypes.object
+        map: React.PropTypes.object,
+        style: React.PropTypes.object,
+        fluid: React.PropTypes.bool
     },
     contextTypes: {
         messages: React.PropTypes.object
     },
     getDefaultProps() {
         return {
+            id: "MetadataModal",
             onMetadataEdit: ()=> {},
+            onCreateThumbnail: ()=> {},
+            onDeleteThumbnail: ()=> {},
             user: {
                 name: "Guest"
             },
@@ -51,9 +60,9 @@ const MetadataModal = React.createClass({
             options: {},
             useModal: true,
             closeGlyph: "",
-            style: {},
-            buttonSize: "large",
-            includeCloseButton: true
+            buttonSize: "small",
+            includeCloseButton: true,
+            fluid: true
         };
     },
     componentWillReceiveProps() {
@@ -70,6 +79,10 @@ const MetadataModal = React.createClass({
         return {
             loading: false
         };
+    },
+    updateThumbnail() {
+        this.refs.thumbnail.updateThumbnail();
+        this.props.onClose();
     },
     onMetadataEdit() {
         if (
@@ -94,6 +107,7 @@ const MetadataModal = React.createClass({
             bsSize={this.props.buttonSize}
             onClick={() => {
                 this.setState({loading: true});
+                this.updateThumbnail();
                 this.onMetadataEdit();
             }}><Message msgId="save" /></Button>
         {this.props.includeCloseButton ? <Button
@@ -115,12 +129,28 @@ const MetadataModal = React.createClass({
         return this.props.useModal ? (
             <Modal {...this.props.options}
                 show={this.props.show}
-                onHide={this.props.onClose}>
+                onHide={this.props.onClose}
+                id={this.props.id}>
                 <Modal.Header key="mapMetadata" closeButton>
-                  <Modal.Title><Message msgId="manager.editMapMetadata" /></Modal.Title>
+                    <Modal.Title>
+                        <Message msgId="manager.editMapMetadata" />
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {body}
+                    <Grid fluid={this.props.fluid}>
+                        <Row>
+                            <Col xs={7}>
+                                <Thumbnail
+                                    onCreateThumbnail={this.props.onCreateThumbnail}
+                                    onDeleteThumbnail={this.props.onDeleteThumbnail}
+                                    map={this.props.map}
+                                    ref="thumbnail"/>
+                            </Col>
+                            <Col xs={5}>
+                                {body}
+                            </Col>
+                        </Row>
+                    </Grid>
                 </Modal.Body>
                 <Modal.Footer>
                   {footer}
