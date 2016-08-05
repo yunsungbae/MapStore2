@@ -27,6 +27,7 @@ var DefaultLayer = React.createClass({
         hideSettings: React.PropTypes.func,
         updateSettings: React.PropTypes.func,
         updateNode: React.PropTypes.func,
+        removeNode: React.PropTypes.func,
         activateLegendTool: React.PropTypes.bool,
         activateSettingsTool: React.PropTypes.bool,
         settingsText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
@@ -35,7 +36,8 @@ var DefaultLayer = React.createClass({
         closeText: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.element]),
         modalOptions: React.PropTypes.object,
         settingsOptions: React.PropTypes.object,
-        visibilityCheckType: React.PropTypes.string
+        visibilityCheckType: React.PropTypes.string,
+        groups: React.PropTypes.array
     },
     getDefaultProps() {
         return {
@@ -76,10 +78,12 @@ var DefaultLayer = React.createClass({
                                element={this.props.node}
                                updateSettings={this.props.updateSettings}
                                updateNode={this.props.updateNode}
+                               removeNode={this.props.removeNode}
                                titleText={this.props.settingsText}
                                opacityText={this.props.opacityText}
                                saveText={this.props.saveText}
-                               closeText={this.props.closeText}/>
+                               closeText={this.props.closeText}
+                               groups={this.props.groups}/>
                 );
             }
         }

@@ -23,10 +23,13 @@
             "windowTitle": "Layer Properties",
             "title": "Title",
             "name": "Name",
+            "group": "Group",
             "general": "General",
             "display": "Display",
             "style": "Style",
-            "format": "Format"
+            "format": "Format",
+            "delete": "Delete",
+            "confirmDelete": "Are you sure?"
         },
         "enable": "Enable",
         "background": "Background",
@@ -572,7 +575,8 @@
             "pagination": {
                 "page": "Page",
                 "of":   "of",
-                "to":   "to"
+                "to":   "to",
+                "more": "more"
             }
         },
         "vectorstyler": {
