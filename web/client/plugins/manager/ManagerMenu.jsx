@@ -47,7 +47,7 @@ const ManagerMenu = React.createClass({
             entries: [],
             role: "",
             onItemClick: () => {},
-            title: <MenuItem header><Message msgId="manager.title"/></MenuItem>,
+            title: <MenuItem header>Manager</MenuItem>,
             controls: [],
             mapType: "leaflet",
             panelStyle: {

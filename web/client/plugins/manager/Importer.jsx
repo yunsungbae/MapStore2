@@ -38,14 +38,7 @@ const ImporterPlugin = connect(
             error: state.importer && state.importer.loadingError
     }; },
     (dispatch, ownProps) => {
-        return assign({
-            onMount: () => {
-                if (!ownProps.selectedTask && !ownProps.selectedImport) {
-                    dispatch( loadImports(getURL(ownProps)));
-                }
-            }
-        },
-        bindActionCreators({
+        return bindActionCreators({
             loadImports: loadImports.bind(null, getURL(ownProps)),
             createImport: createImport.bind(null, getURL(ownProps)),
             uploadImportFiles: uploadImportFiles.bind(null, getURL(ownProps) ),
@@ -60,7 +53,15 @@ const ImporterPlugin = connect(
             deleteTask: deleteTask.bind(null, getURL(ownProps)),
             loadLayer: loadLayer.bind(null, getURL(ownProps)),
             updateLayer: updateLayer.bind(null, getURL(ownProps))
-        }, dispatch));
+        }, dispatch);
+    }, (stateProps, dispatchProps, ownProps) => {
+        return assign({}, ownProps, stateProps, dispatchProps, {
+                onMount: () => {
+                    if (!stateProps.selectedTask && !stateProps.selectedImport) {
+                        dispatchProps.loadImports(getURL(ownProps));
+                    }
+                }
+            });
     }
 )(require("../../components/manager/importer/Importer"));
 module.exports = {

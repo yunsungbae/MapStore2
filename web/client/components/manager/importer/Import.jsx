@@ -11,6 +11,7 @@ const Message = require('../../I18N/Message');
 const TaskProgress = require('./TaskProgress');
 const ImporterUtils = require('../../../utils/ImporterUtils');
 const {Grid, Row, Panel, Label, Table, Button, Glyphicon} = require('react-bootstrap');
+require("./style/importer.css");
 
 const Task = React.createClass({
     propTypes: {
@@ -18,10 +19,14 @@ const Task = React.createClass({
         "import": React.PropTypes.object,
         loadImport: React.PropTypes.func,
         loadTask: React.PropTypes.func,
+        loadLayer: React.PropTypes.func,
         runImport: React.PropTypes.func,
         updateProgress: React.PropTypes.func,
         deleteImport: React.PropTypes.func,
         deleteTask: React.PropTypes.func
+    },
+    contextTypes: {
+        router: React.PropTypes.object
     },
     getDefaultProps() {
         return {
@@ -30,6 +35,7 @@ const Task = React.createClass({
             loadTask: () => {},
             runImport: () => {},
             loadImport: () => {},
+            loadLayer: () => {},
             updateProgress: () => {},
             deleteImport: () => {},
             deleteTask: () => {}
@@ -71,10 +77,14 @@ const Task = React.createClass({
             <td><a onClick={(e) => {e.preventDefault(); this.props.loadTask(task.id); }} >{task.id}</a></td>
             <td><Label bsStyle={this.getbsStyleForState(task.state)}>{task.state}</Label>{this.renderProgressTask(task)}{this.renderLoadingTask(task)}</td>
             <td key="actions">
-                <Button bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteTask(this.props.import.id, task.id); }}>
-                    <Glyphicon glyph="remove"/>
+                <Button className="importer-button" bsSize="xsmall" onClick={(e) => {e.preventDefault(); this.props.deleteTask(this.props.import.id, task.id); }}>
+                    <Glyphicon glyph="remove-circle"/>
                     <Message msgId="importer.import.delete" />
                 </Button>
+                {task.state === "COMPLETE" ?
+                    <Button className="importer-button" bsSize="xsmall" onClick={this.editDefaultStyle.bind(null, task.id)}>
+                        <Glyphicon glyph="pencil"/>Edit Default Style</Button>
+                : null}
             </td>
         </tr>);
     },
@@ -126,12 +136,20 @@ const Task = React.createClass({
                     </Table>
                 </Row>
                 <Row style={{"float": "right"}}>
-                    <Button bsStyle="success" onClick={() => {this.props.runImport(this.props.import.id); }}><Message msgId="importer.import.runImport" /></Button>&nbsp;
+                    {
+                        this.props.import.tasks.reduce((prev, cur) => (prev || (cur.state === "READY")), false) ?
+                        (<Button bsStyle="success" onClick={() => {this.props.runImport(this.props.import.id); }}><Message msgId="importer.import.runImport" /></Button>)
+                        : null
+                    }
                     <Button bsStyle="danger" onClick={() => {this.props.deleteImport(this.props.import.id); }}><Message msgId="importer.import.deleteImport" /></Button>
                 </Row>
             </Grid>
             </Panel>
         );
+    },
+    editDefaultStyle(taskId) {
+        this.context.router.push("/styler/openlayers");
+        this.props.loadLayer(taskId);
     }
 });
 module.exports = Task;

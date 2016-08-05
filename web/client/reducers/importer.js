@@ -217,7 +217,9 @@ function importer(state = {}, action) {
                     selectedTask: task
                 });
             }
-            return state;
+            return assign({}, state, {
+                layer: action.layer
+            });
         }
         case LAYER_UPDATED: {
             let task = state.selectedTask;
