@@ -40,9 +40,6 @@ const Thumbnail = React.createClass({
     getDefaultProps() {
         return {
             glyphicon: "remove-circle",
-            style: {
-                backgroundImage: "url(/dist/web/client/components/maps/style/default.png)"
-            },
             // CALLBACKS
             onDrop: () => {},
             onRemoveThumbnail: () => {},
@@ -54,24 +51,33 @@ const Thumbnail = React.createClass({
         };
     },
     getInitialState() {
-        // TODO check if this is working
-        let thumbnail = (this.props.map && this.props.map.thumbnail && this.props.map.thumbnail.trim().length !== 0 ) ? decodeURIComponent(this.props.map.thumbnail) : null;
+        let thumbnail = (this.props.map && this.props.map.thumbnail && this.props.map.thumbnail !== "NODATA" ) ? decodeURIComponent(this.props.map.thumbnail) : null;
         return {
-            loading: false,
             files: [],
             srcImg: thumbnail
         };
     },
+    componentWillReceiveProps(nextProps) {
+        if (this.props.map && nextProps.map) {
+            let thumbnail = (nextProps.map.thumbnail && this.props.map.thumbnail !== "NODATA" ) ? decodeURIComponent(nextProps.map.thumbnail) : null;
+            if (this.props.map.thumbnail !== nextProps.map.thumbnail) {
+                this.setState({
+                    files: [],
+                    srcImg: thumbnail
+                });
+            }
+
+        }
+    },
     onRemoveThumbnail(event) {
         event.stopPropagation();
-        // remove thumbnail
-        // this.props.onRemoveThumbnail();
         this.setState({
+            files: [],
             srcImg: null
         });
     },
     getThumbnailUrl() {
-        return this.state.srcImg;
+        return this.state.srcImg === "NODATA" ? null : this.state.srcImg;
     },
     getFiles() {
         return this.state.files;
@@ -91,7 +97,7 @@ const Thumbnail = React.createClass({
         } else {
             // reset image
             this.setState({
-                srcImg: null
+                files: []
             });
         }
     },
@@ -107,6 +113,7 @@ const Thumbnail = React.createClass({
         });
         return uuid;
     },
+
     getDataUri(callback) {
         let filesSelected = this.getFiles();
         if (filesSelected.length > 0) {
@@ -122,24 +129,21 @@ const Thumbnail = React.createClass({
             const name = this.generateUUID(); // create new unique name
             const category = "THUMBNAIL";
 
-            if (!data) {
-                // TODO here it needs to be updated the thumbnail attribute of the this.props.map.id Resource with a space and must be done only if the user doesnt provide any image
-            }
-            if (this.props.map.thumbnail && this.props.map.thumbnail.includes("geostore")) {
-                // DELETE old thumbnail resource if no image is provided
+            // user removed the thumbnail (the original url is present but not the preview)
+            if (this.props.map && !data && this.props.map.thumbnail && !this.refs.imgThumbnail) {
+                this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id);
+                // TODO update map attribute
 
-                // TODO this doesnt work if the url istnt codified
-                let start = (this.props.map.thumbnail).indexOf("data%2F") + 7;
-                let end = (this.props.map.thumbnail).indexOf("%2Fraw");
-                let idThumbnail = this.props.map.thumbnail.slice(start, end);
-
-                // TODO delete should delete the old thumbnail
-                this.props.onDeleteThumbnail(idThumbnail);
-            }
-            // POST if thumbanil is not from geostore
-            if ( this.props.map && ( this.refs.imgThumbnail && this.refs.imgThumbnail.src !== this.props.map.thumbnail ) ) {
+            // there is a thumbnail to upload
+            } else if ( this.props.map && data && ( this.refs.imgThumbnail && this.refs.imgThumbnail.src !== decodeURIComponent(this.props.map.thumbnail) ) ) {
+                // remove old one if present
+                if (this.props.map.thumbnail) {
+                    this.deleteThumbnail(this.props.map.thumbnail);
+                }
+                // create the new one (and update the thumbnail attribute)
                 this.props.onCreateThumbnail(name, data, category, this.props.map.id);
             }
+            return data;
         });
     },
     render() {
@@ -150,7 +154,7 @@ const Thumbnail = React.createClass({
                 <div className="dropzone-thumbnail-container">
                     <label className="control-label"><Message msgId="map.thumbnail"/></label>
                     <Dropzone className="dropzone alert alert-info" rejectClassName="alert-danger" onDrop={this.onDrop}>
-                    { (this.state.srcImg ) ?
+                    { (this.getThumbnailUrl() ) ?
                         (<div>
                             <img src={this.getThumbnailUrl()} ref="imgThumbnail"/>
                             <div className="dropzone-content-added">{this.props.text}<br/>{this.props.text2}</div>
@@ -163,6 +167,21 @@ const Thumbnail = React.createClass({
                 </div>
             )
         );
+    },
+    deleteThumbnail(thumbnail, mapId) {
+        if (thumbnail && thumbnail.includes("geostore")) {
+            // DELETE old thumbnail resource if no image is provided
+
+            // this doesn't work if the url is not  URL encoded (because of GeoStore / Tomcat parameter encoding issues )
+            let start = (thumbnail).indexOf("data%2F") + 7;
+            let end = (thumbnail).indexOf("%2Fraw");
+            let idThumbnail = thumbnail.slice(start, end);
+
+            // delete the old thumbnail
+            if (idThumbnail) {
+                this.props.onDeleteThumbnail(idThumbnail, mapId);
+            }
+        }
     }
 });
 

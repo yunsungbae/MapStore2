@@ -31,10 +31,9 @@ const MetadataModal = React.createClass({
         authHeader: React.PropTypes.string,
         show: React.PropTypes.bool,
         options: React.PropTypes.object,
-        onMetadataEdit: React.PropTypes.func,
+        onSave: React.PropTypes.func,
         onCreateThumbnail: React.PropTypes.func,
         onDeleteThumbnail: React.PropTypes.func,
-        onMetadataEdited: React.PropTypes.func,
         onClose: React.PropTypes.func,
         useModal: React.PropTypes.bool,
         closeGlyph: React.PropTypes.string,
@@ -50,7 +49,7 @@ const MetadataModal = React.createClass({
     getDefaultProps() {
         return {
             id: "MetadataModal",
-            onMetadataEdit: ()=> {},
+            onSave: ()=> {},
             onCreateThumbnail: ()=> {},
             onDeleteThumbnail: ()=> {},
             user: {
@@ -65,38 +64,32 @@ const MetadataModal = React.createClass({
             fluid: true
         };
     },
-    componentWillReceiveProps() {
-        this.setState({
-            loading: false
-        });
-    },
     setMapNameValue(newName) {
         if (this.refs.mapMetadataForm) {
             this.refs.mapMetadataForm.setMapNameValue(newName);
         }
     },
-    getInitialState() {
-        return {
-            loading: false
-        };
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.map && this.props.map && !nextProps.map.loading && this.state && this.state.saving) {
+            this.setState({
+                saving: false
+            });
+            this.props.onClose();
+        }
+
     },
     updateThumbnail() {
         this.refs.thumbnail.updateThumbnail();
-        this.props.onClose();
     },
-    onMetadataEdit() {
-        if (
-            this.props.map &&
-            (
-            this.refs.mapMetadataForm.refs.mapDescription.getValue() !== this.props.map.description ||
-            this.refs.mapMetadataForm.refs.mapName.getValue() !== this.props.map.name
-            )) {
-            this.props.onMetadataEdit(this.props.map.id, this.refs.mapMetadataForm.refs.mapName.getValue(), this.refs.mapMetadataForm.refs.mapDescription.getValue());
+    onSave() {
+        if ( this.isMetadataChanged() ) {
+            let name = this.refs.mapMetadataForm.refs.mapName.getValue();
+            let description = this.refs.mapMetadataForm.refs.mapDescription.getValue();
+            this.props.onSave(this.props.map.id, name, description);
         }
-        this.props.onClose();
     },
     renderLoading() {
-        return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn/> : null;
+        return this.props.map && this.props.map.updating ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn/> : null;
     },
     render() {
         const footer = (<span role="footer"><div style={{"float": "left"}}>{this.renderLoading()}</div>
@@ -106,9 +99,11 @@ const MetadataModal = React.createClass({
             bsStyle="primary"
             bsSize={this.props.buttonSize}
             onClick={() => {
-                this.setState({loading: true});
+                this.setState({
+                    saving: true
+                });
                 this.updateThumbnail();
-                this.onMetadataEdit();
+                this.onSave();
             }}><Message msgId="save" /></Button>
         {this.props.includeCloseButton ? <Button
             key="closeButton"
@@ -161,6 +156,12 @@ const MetadataModal = React.createClass({
                 {body}
                 {footer}
             </Dialog>
+        );
+    },
+    isMetadataChanged() {
+        return this.props.map && (
+            this.refs.mapMetadataForm.refs.mapDescription.getValue() !== this.props.map.description ||
+            this.refs.mapMetadataForm.refs.mapName.getValue() !== this.props.map.name
         );
     }
 });
