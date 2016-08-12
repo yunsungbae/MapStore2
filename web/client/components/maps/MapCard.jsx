@@ -22,7 +22,7 @@ const MapCard = React.createClass({
         style: React.PropTypes.object,
         map: React.PropTypes.object,
         viewerUrl: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]),
-        onMetadataEdit: React.PropTypes.func,
+        onSave: React.PropTypes.func,
         onCreateThumbnail: React.PropTypes.func,
         onDeleteThumbnail: React.PropTypes.func,
         onMapDelete: React.PropTypes.func,
@@ -32,7 +32,7 @@ const MapCard = React.createClass({
         return {
             onCreateThumbnail: ()=> {},
             onDeleteThumbnail: ()=> {},
-            onMetadataEdit: ()=> {},
+            onSave: ()=> {},
             onMapDelete: ()=> {},
             style: {
                 backgroundImage: 'url(' + thumbUrl + ')',
@@ -58,7 +58,7 @@ const MapCard = React.createClass({
     getCardStyle() {
         if (this.props.map.thumbnail) {
             return assign({}, this.props.style, {
-                backgroundImage: 'url(' + decodeURIComponent(this.props.map.thumbnail) + ')'
+                backgroundImage: 'url(' + (this.props.map.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.map.thumbnail)) + ')'
             });
         }
         return this.props.style;
@@ -75,17 +75,21 @@ const MapCard = React.createClass({
             availableAction.push({
                  onClick: (evt) => {this.stopPropagate(evt); this.onEdit(this.props.map); },
                  glyph: "wrench",
+                 disabled: this.props.map.updating,
+                 loading: this.props.map.updating,
                  tooltip: <Message msgId="manager.editMapMetadata" />
          }, {
                  onClick: (evt) => {this.stopPropagate(evt); this.displayDeleteDialog(); },
                  glyph: "remove-circle",
+                 disabled: this.props.map.deleting,
+                 loading: this.props.map.deleting,
                  tooltip: <Message msgId="manager.deleteMap" />
          });
         }
         return (
            <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.title || this.props.map.name} actions={availableAction}>
                <div className="map-thumb-description">{this.props.map.description}</div>
-               <MetadataModal ref="metadataModal" show={this.state.displayMetadataEdit} onHide={this.close} onClose={this.close} map={this.props.map} onMetadataEdit={this.props.onMetadataEdit} onDeleteThumbnail={this.props.onDeleteThumbnail} onCreateThumbnail={this.props.onCreateThumbnail}/>
+               <MetadataModal ref="metadataModal" show={this.state.displayMetadataEdit} onHide={this.close} onClose={this.close} map={this.props.map} onSave={this.props.onSave} onDeleteThumbnail={this.props.onDeleteThumbnail} onCreateThumbnail={this.props.onCreateThumbnail}/>
                <ConfirmModal ref="deleteMapModal" show={this.state.displayDeleteDialog} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={<Message msgId="manager.deleteMap" />} confirmText={<Message msgId="manager.deleteMap" />} cancelText={<Message msgId="cancel" />} body={<Message msgId="manager.deleteMapMessage" />} />
            </GridCard>
         );

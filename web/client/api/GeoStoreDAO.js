@@ -96,11 +96,26 @@ var Api = {
                 }
             }, options)));
     },
-    postResource: function(name, data, category, options) {
+    postResource: function(metadata, data, category, options) {
+        let name = metadata.name;
+        let description = metadata.description || "";
+        // filter attributes from the metadata object excluding the default ones
+        let attributes = metadata.attributes || _.pick(metadata, Object.keys(metadata).filter(function(key) {
+            return key !== "name" && key !== "description" && key !== "id";
+        }));
+
+        let xmlAttrs = Object.keys(attributes).map((key) => {
+            return "<attribute><name>" + key + "</name><value>" + attributes[key] + "</value><type>STRING</type></attribute>";
+        });
+        let attributesSection = "";
+        if (xmlAttrs.length > 0) {
+            attributesSection = "<Attributes>" + xmlAttrs.join("") + "</Attributes>";
+        }
         return axios.post(
             "resources/",
-                "<Resource><description></description><metadata></metadata>" +
+                "<Resource><description>" + description + "</description><metadata></metadata>" +
                 "<name>" + (name || "") + "</name><category><name>" + (category || "") + "</name></category>" +
+                attributesSection +
                 "<store><data><![CDATA[" + (data || "") + "]]></data></store></Resource>",
             this.addBaseUrl(_.merge({
                 headers: {

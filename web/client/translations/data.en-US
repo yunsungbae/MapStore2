@@ -44,6 +44,7 @@
         "printbutton": "Print",
         "noresultfound": "No Result found",
         "save": "Save",
+		"saveAs": "Save As...",
         "opacity": "Opacity",
         "close": "Close",
         "cancel": "Cancel",

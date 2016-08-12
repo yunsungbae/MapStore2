@@ -15,7 +15,7 @@ const MapsGrid = connect((state) => {
         bsSize: "small",
         maps: state.maps && state.maps.results ? state.maps.results : [],
         loading: state.maps && state.maps.loading,
-        mapType: state.home && state.home.mapType
+        mapType: (state.home && state.home.mapType) || state.maps && state.maps.mapType
     };
 }, {
     loadMaps,
@@ -99,5 +99,7 @@ module.exports = {
     MapsPlugin: connect(() => ({}), {
         loadMaps
     })(Maps),
-    reducers: require('../reducers/maps')
+    reducers: [
+        require('../reducers/maps')
+    ]
 };
