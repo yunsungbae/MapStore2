@@ -8,6 +8,7 @@
 const React = require('react');
 
 const {Nav, NavItem} = require('react-bootstrap');
+const {connect} = require('react-redux');
 // require('../../assets/css/home.css');
 
 const Manager = React.createClass({
@@ -70,5 +71,7 @@ const Manager = React.createClass({
 });
 
 module.exports = {
-    ManagerPlugin: Manager
+    ManagerPlugin: connect((state, ownProps) => ({
+        selectedTool: ownProps.tool
+    }))(Manager)
 };
