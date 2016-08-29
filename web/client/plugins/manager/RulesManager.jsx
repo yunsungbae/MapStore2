@@ -59,8 +59,10 @@ module.exports = {
         hide: true,
         Manager: {
             id: "rulesmanager",
+            msgId: "rulesmanager.title",
             name: 'rulesmanager',
             position: 2,
+            glyph: "lock",
             title: 'Rules Manager'
         }
     }),

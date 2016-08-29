@@ -71,7 +71,8 @@ module.exports = {
             id: "importer",
             name: 'importer',
             position: 1,
-            title: 'Import Data'
+            title: 'Import Data',
+            glyph: "import"
         }
     }),
     reducers: {importer: require('../../reducers/importer')}

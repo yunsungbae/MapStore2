@@ -7,9 +7,10 @@
  */
 const React = require('react');
 
-const {Nav, NavItem} = require('react-bootstrap');
+const {Nav, NavItem, Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
-// require('../../assets/css/home.css');
+const {Message} = require('../../components/I18N/I18N');
+require('./style/manager.css');
 
 const Manager = React.createClass({
     propTypes: {
@@ -24,8 +25,13 @@ const Manager = React.createClass({
         return {
             items: [],
             mapType: "openlayers",
-            selectedTool: "rulesmanager"
+            selectedTool: "importer"
         };
+    },
+    renderToolIcon(tool) {
+        if (tool.glyph) {
+            return <Glyphicon glyph={tool.glyph} />;
+        }
     },
     renderNavItems() {
         return this.props.items.map((tool) =>
@@ -33,8 +39,9 @@ const Manager = React.createClass({
                 eventKey={tool.id}
                 key={tool.id}
                 href="#"
-                onClick={(event) => {event.preventDefault(); this.context.router.push("/manager/" + tool.id); }}
-                >{tool.title || tool.id}
+                onClick={(event) => {event.preventDefault(); this.context.router.push("/manager/" + tool.id); }}>
+                    {this.renderToolIcon(tool)}
+                    {tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}
             </NavItem>));
     },
     renderPlugin() {
@@ -48,25 +55,15 @@ const Manager = React.createClass({
 
     },
     render() {
-        return (
-                    <div style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            margin: "20px",
-                            height: "100%"
-                        }}>
-                        <Nav bsStyle="pills" stacked activeKey={this.props.selectedTool} style={{
-                            order: -1,
-                            flex: "0 0 10em"
-                        }}>
-                            {this.renderNavItems()}
-                        </Nav>
-                        <div style={{
-                            flex: 1,
-                            margin: "20px"
-                        }}>{this.renderPlugin()} </div>
-                    </div>
-        );
+        return (<div className="Manager-Container">
+            <Nav className="Manager-Tools-Nav" bsStyle="pills" stacked activeKey={this.props.selectedTool}>
+                {this.renderNavItems()}
+            </Nav>
+            <div style={{
+                flex: 1,
+                margin: "20px"
+            }}>{this.renderPlugin()} </div>
+        </div>);
     }
 });
 

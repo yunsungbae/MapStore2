@@ -65,7 +65,7 @@ const ManagerMenu = React.createClass({
             return {
                 action: (context) => {context.router.push(entry.path); },
                 text: entry.msgId ? <Message msgId={entry.msgId} /> : entry.text,
-                glyph: entry.glyph || (entry.cfg && entry.cfg.glyph)
+                cfg: {...entry}
             };
         })];
     },
