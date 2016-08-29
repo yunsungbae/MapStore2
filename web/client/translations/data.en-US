@@ -613,9 +613,9 @@
             "tooltip": "Create and edit layer style",
             "paneltitle": "Styler",
             "layerlabel": "Layer"
-        }
-    },
+        },
         "rulesmanager": {
+            "title": "Access Rules",
             "role": "Role",
             "user": "User",
             "service": "Service",
@@ -640,10 +640,11 @@
             "errorMovingRules": "Error moving rules.",
             "errorDeletingRules": "Error deleting rules.",
             "errorAddingRule": "Error adding rule.",
-            "errorUpdatingRule": "Error udating rule.",
+            "errorUpdatingRule": "Error updating rule.",
             "deleteModal": "Delete Rules",
             "selectedRulesDelete": "Delete selected rules ?",
             "deleteButton": "Delete",
             "cancelButton": "Cancel"
         }
+    }
 }

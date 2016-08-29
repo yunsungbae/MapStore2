@@ -41,7 +41,6 @@ const MetadataModal = React.createClass({
         buttonSize: React.PropTypes.string,
         includeCloseButton: React.PropTypes.bool,
         map: React.PropTypes.object,
-        style: React.PropTypes.object,
         fluid: React.PropTypes.bool
     },
     contextTypes: {
@@ -64,11 +63,6 @@ const MetadataModal = React.createClass({
             includeCloseButton: true,
             fluid: true
         };
-    },
-    componentWillReceiveProps() {
-        this.setState({
-            loading: false
-        });
     },
     setMapNameValue(newName) {
         if (this.refs.mapMetadataForm) {
