@@ -37,6 +37,7 @@ const MetadataModal = React.createClass({
         onClose: React.PropTypes.func,
         useModal: React.PropTypes.bool,
         closeGlyph: React.PropTypes.string,
+        style: React.PropTypes.object,
         buttonSize: React.PropTypes.string,
         includeCloseButton: React.PropTypes.bool,
         map: React.PropTypes.object,
@@ -64,6 +65,11 @@ const MetadataModal = React.createClass({
             fluid: true
         };
     },
+    componentWillReceiveProps() {
+        this.setState({
+            loading: false
+        });
+    },
     setMapNameValue(newName) {
         if (this.refs.mapMetadataForm) {
             this.refs.mapMetadataForm.setMapNameValue(newName);
@@ -87,6 +93,7 @@ const MetadataModal = React.createClass({
             let description = this.refs.mapMetadataForm.refs.mapDescription.getValue();
             this.props.onSave(this.props.map.id, name, description);
         }
+        this.props.onClose();
     },
     renderLoading() {
         return this.props.map && this.props.map.updating ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn/> : null;
