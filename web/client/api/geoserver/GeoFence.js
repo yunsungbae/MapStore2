@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const axios = require('../libs/ajax');
+const axios = require('../../libs/ajax');
 const assign = require('object-assign');
 
-const ConfigUtils = require('../utils/ConfigUtils');
+const ConfigUtils = require('../../utils/ConfigUtils');
 
 var Api = {
 

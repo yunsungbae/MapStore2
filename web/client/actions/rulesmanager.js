@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const GeoServerAPI = require('../api/GeoServerDAO');
+const GeoServerAPI = require('../api/geoserver/GeoFence');
 
 const axios = require('../libs/ajax');
 const CatalogAPI = require('../api/CSW');
