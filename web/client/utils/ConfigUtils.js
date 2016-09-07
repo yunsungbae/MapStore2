@@ -59,6 +59,7 @@ var ConfigUtils = {
             if (typeof response.data === 'object') {
                 defaultConfig = assign({}, defaultConfig, response.data);
             }
+            return defaultConfig;
         });
     },
 
