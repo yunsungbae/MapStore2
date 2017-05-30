@@ -12,6 +12,7 @@ var VisibilityCheck = require('./fragments/VisibilityCheck');
 var Title = require('./fragments/Title');
 var InlineSpinner = require('../misc/spinners/InlineSpinner/InlineSpinner');
 var WMSLegend = require('./fragments/WMSLegend');
+var VectorLegend = require('./fragments/VectorLegend');
 const ConfirmModal = require('../maps/modals/ConfirmModal');
 const LayersTool = require('./fragments/LayersTool');
 const SettingsModal = require('./fragments/SettingsModal');
@@ -145,7 +146,10 @@ var DefaultLayer = React.createClass({
         }
         return (<div position="collapsible" className="collapsible-toc">
              <div style={{minHeight: "35px"}}>{tools}</div>
-             <div><WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales}/></div>
+             <div>
+                 <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales}/>
+                 <VectorLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales}/>
+             </div>
         </div>);
     },
     renderTools() {
