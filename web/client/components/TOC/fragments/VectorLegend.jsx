@@ -28,12 +28,14 @@ var VectorLegend = React.createClass({
                     />,
                 'LineString': (style) => <path d="M5 5 l 20 20"
                     stroke={style.stroke && style.stroke.color || 'blue'}
+                    strokeDasharray={style.stroke.lineDash && style.stroke.lineDash.join(',') || undefined}
                     strokeWidth={style.stroke && style.stroke.width || 0}
                     strokeOpacity={style.stroke && style.stroke.opacity || 1.0}
                     />,
                 'Polygon': (style) => <rect x="5" y="5" width="20" height="20"
                         fill={style.fill && style.fill.color || 'rgba(0,0,0,0)'}
                         stroke={style.stroke && style.stroke.color || 'blue'}
+                        strokeDasharray={style.stroke.lineDash && style.stroke.lineDash.join(',') || undefined}
                         strokeWidth={style.stroke && style.stroke.width || 0}
                         strokeOpacity={style.stroke && style.stroke.opacity || 1.0}
                         fillOpacity={style.fill && style.fill.opacity || 0.0}
