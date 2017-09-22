@@ -103,8 +103,14 @@ class LeafletMap extends React.Component {
         this.attribution.addTo(this.map);
         if (this.props.mapOptions.attribution && this.props.mapOptions.attribution.container) {
             document.querySelector(this.props.mapOptions.attribution.container).appendChild(this.attribution.getContainer());
-            if (document.querySelector('.leaflet-control-container .leaflet-control-attribution')) {
-                document.querySelector('.leaflet-control-container .leaflet-control-attribution').parentNode.removeChild(document.querySelector('.leaflet-control-container .leaflet-control-attribution'));
+            try {
+                if (document.querySelector('.leaflet-control-container .leaflet-control-attribution')) {
+                    document.querySelector('.leaflet-control-container .leaflet-control-attribution').parentNode.removeChild(document.querySelector('.leaflet-control-container .leaflet-control-attribution'));
+                }
+            } catch(e) {
+                /* eslint-disable */
+                console.log(e);
+                /* eslint-enable */
             }
         }
 
