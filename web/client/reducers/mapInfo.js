@@ -82,8 +82,7 @@ function mapInfo(state = {}, action) {
     }
     case CLICK_ON_MAP: {
         return assign({}, state, {
-            clickPoint: action.point,
-            clickLayer: action.layer || null
+            clickPoint: action.point
         });
     }
     case CHANGE_MAPINFO_FORMAT: {

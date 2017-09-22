@@ -63,11 +63,10 @@ function changeMapScales(scales) {
     };
 }
 
-function clickOnMap(point, layer) {
+function clickOnMap(point) {
     return {
         type: CLICK_ON_MAP,
-        point: point,
-        layer
+        point: point
     };
 }
 

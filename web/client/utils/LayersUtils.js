@@ -264,7 +264,6 @@ const LayersUtils = {
     },
     saveLayer: (layer) => {
         return {
-            id: layer.id,
             features: layer.features,
             format: layer.format,
             group: layer.group,
@@ -275,7 +274,6 @@ const LayersUtils = {
             provider: layer.provider,
             styles: layer.styles,
             style: layer.style,
-            styleName: layer.styleName,
             availableStyles: layer.availableStyles,
             capabilitiesURL: layer.capabilitiesURL,
             title: layer.title,
@@ -292,7 +290,6 @@ const LayersUtils = {
             dimensions: layer.dimensions || [],
             maxZoom: layer.maxZoom,
             maxNativeZoom: layer.maxNativeZoom,
-            hideLoading: layer.hideLoading || false,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },

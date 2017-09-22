@@ -27,8 +27,7 @@ function draw(state = initialState, action) {
                 drawOwner: action.owner,
                 drawMethod: action.method,
                 options: action.options,
-                features: action.features,
-                style: action.style
+                features: action.features
             });
         case SET_CURRENT_STYLE:
             return assign({}, state, {
