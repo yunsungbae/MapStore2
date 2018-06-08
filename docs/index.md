@@ -58,4 +58,4 @@ Use the default credentials (admin / admin) to login and start creating your map
 
 # Documentation
  * [Developers Guide](developer-guide/)
- * [Users Guide] TBD
+ * [Users Guide] (user-guide/)
