@@ -1,5 +1,5 @@
 In order to get started, let us look at the portal interface and get an idea of how to navigate around it. Some functionalities are only restricted for 
-*Administrators* and will be pointed out once encountered. However, you will learn more about *Administrators*, *Users* and *Groups* [here](). 
+*Administrators* and will be pointed out once encountered. However, you will learn more about *Administrators*, *Users* and *Groups* [here](admin.md). 
 
 Once logged in as *Administrator*, the *Welcome Home Page* shows up as in the figure below and you will be able to view and make use of all the functionalities. 
 
@@ -59,4 +59,4 @@ Depending on the permissions, the user can view and use the configuration icon b
 * <img src="img/delete.png" /> allows you to delete the map or the dashboard.
 * <img src="img/properties.png" /> allows you to edit the properties of the map or the dashboard such as the thumbnail, name, details and permissions. 
 * <img src="img/details.png" /> allows you to show the map or dashboard details.
-* <img src="img/details.png" /> allows you to add the map or dashboard to *Featured*. 
+* <img src="img/add-featured.png" /> allows you to add the map or dashboard to *Featured*. 
