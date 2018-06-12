@@ -6,8 +6,9 @@
 
 [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) has been designed from the beginning to provide users with a coherent and comprehensive experience across different devices, hence it should automatically adapt to different screen size as shown below.
 
-#MapStore 2 Overview
+#MapStore 2 Documentation
 
-* [Home Page Overview](home-page)
-* [Exploring Maps](exploring-maps)
-* [Exploring Dashboards](exploring-dashboards)
+* [Home Page Overview](home-page.md)
+* [Managing Users and Groups](admin.md)
+* [Exploring Maps](exploring-maps.md)
+* [Exploring Dashboards](exploring-dashboards.md)
