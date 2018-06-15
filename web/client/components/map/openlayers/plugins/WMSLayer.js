@@ -55,6 +55,7 @@ Layers.registerType('wms', {
                 visible: options.visibility !== false,
                 zIndex: options.zIndex,
                 source: new ol.source.ImageWMS({
+                    crossOrigin: "Anonymous",
                     url: urls[0],
                     params: queryParameters
                 })
@@ -69,6 +70,7 @@ Layers.registerType('wms', {
             source: new ol.source.TileWMS(objectAssign({
               urls: urls,
               params: queryParameters,
+              crossOrigin: "Anonymous",
               tileGrid: new ol.tilegrid.TileGrid({
                   extent: extent,
                   resolutions: mapUtils.getResolutions(),
