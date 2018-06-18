@@ -1,3 +1,6 @@
+#Home Page Overview
+*******************
+
 In order to get started, let us look at the portal interface and get an idea of how to navigate around it. Some functionalities are only restricted for 
 *Administrators* and will be pointed out once encountered. However, you will learn more about *Administrators*, *Users* and *Groups* [here](admin.md). 
 
@@ -5,8 +8,8 @@ Once logged in as *Administrator*, the *Welcome Home Page* shows up as in the fi
 
  <img src="img/home-page.png" style="" alt="Home Page" class="center" />
 
-# Menu bar
-
+Menu bar
+--------
 On the top of the page, you can find the *Main Menubar* showing the following menus :
 * Connections to [GeoSolutions](https://www.geo-solutions.it/), Featured and Contents sections <img src="img/connections.png" style="width:100px;height:20px;" /> (will be treated later). 
 * Language Switcher 
@@ -22,20 +25,20 @@ The *Accounts manager* is reserved to the *Administrator* where he can manage *U
 
 ---
 
-# Search bar
-
+Search bar
+------------
 Under the menu bar, you can use the *Search bar* to search stored maps and dashboards in [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/).
 
 <img src="img/search-bar.png" style="max-width:500px;" />
 
-# New Map and Dashboard
-
+New Map and Dashboard
+---------------------
 Under the search bar you can find two icon buttons to create a <span style="color:red">New Map</span> or a <span style="color:blue">New Dashboard</span>. 
 
 <img src="img/map-dash.png" style="max-width:700px;" />
 
-# Featured
-
+Featured
+--------
 In this container the favorites maps and dashboards are stored and marked by a green star. 
 
 <img src="img/featured.png" style="max-width:600px;" />
@@ -46,8 +49,8 @@ Only *Administrators* can add maps and dashboards to *Featured* by clicking on t
 
 ---
 
-# Contents
-
+Contents
+--------
 In this container new created maps will be saved under the <span style="color:red">*Maps* </span>container and new created dashboards will be saved under the <span style="color:blue">*Dashboards* </span>container.
 
 <img src="img/contents.png" style="max-width:600px;" />
