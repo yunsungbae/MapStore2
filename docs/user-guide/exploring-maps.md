@@ -1,4 +1,4 @@
-#Exploring Maps
+# Exploring Maps
 **************
 In cartogrophy, a map is any two-dimensional graphic representation of the spatial relationships of the whole or a part of the earth. In digital cartography as in [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/), a map consists in overlaying various layers of geographic data and their styles in data frames, it contains various map elements such as a legend and a scale bar.
 
@@ -14,7 +14,7 @@ From the *Home Page*, **Click** on the *New Map* icon <img src="img/new-map-icon
 
 MapStore WebGIS Portal Interface
 --------------------------------
-To explain you better the map viewer, we have specially added a layer. You will learn more on layers in the [Table of Contents (TOC)](toc.md) and [Menu Bar](menu-bar.md) sections.  
+To explain you better the map viewer, we have specially added a layer. You will learn more on layers in the [Table of Contents (TOC)](toc) and [Menu Bar](menu-bar) sections.  
  
 <img src="img/gui.png" style="max-width:px;" />
 
@@ -33,10 +33,10 @@ The portal interface of [MapStore 2](https://mapstore2.geo-solutions.it/mapstore
 * <span style="color:blue">Data Frame</span>, where the layers are displayed.
 
 Click on the keywords to learn more about the:
-* [Table of Contents (TOC)](toc.md) 
-* [Menu Bar](menu-bar.md) 
-* [Side Bar](side-bar.md)
-* [Basemap Switcher](basemap.md)
-* [Footer](footer.md)
+* [Table of Contents (TOC)](toc) 
+* [Menu Bar](menu-bar) 
+* [Side Bar](side-bar)
+* [Basemap Switcher](basemap)
+* [Footer](footer)
 
 

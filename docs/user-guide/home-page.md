@@ -1,4 +1,4 @@
-#Home Page Overview
+# Home Page Overview
 *******************
 
 In order to get started, let us look at the portal interface and get an idea of how to navigate around it. Some functionalities are only restricted for 

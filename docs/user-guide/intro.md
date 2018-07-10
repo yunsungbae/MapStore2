@@ -8,7 +8,7 @@
 
 MapStore 2 Documentation
 ------------------------
-* [Home Page Overview](home-page.md)
-* [Managing Users and Groups](admin.md)
-* [Exploring Maps](exploring-maps.md)
-* [Exploring Dashboards](exploring-dashboards.md)
+* [Home Page Overview](home-page)
+* [Managing Users and Groups](admin)
+* [Exploring Maps](exploring-maps)
+* [Exploring Dashboards](exploring-dashboards)

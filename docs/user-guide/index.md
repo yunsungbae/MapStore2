@@ -1,2 +1,2 @@
 # Users Documentation
- * [Introduction](intro.md)
+ * [Introduction](intro)
