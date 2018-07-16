@@ -1,4 +1,4 @@
-MapStore 2 leverages a full separation of concerns between the **backend** and the **frontend**.
+apStore 2 leverages a full separation of concerns between the **backend** and the **frontend**.
 
 The frontend is a Javascript web application communicating with MapStore 2 own web services using AJAX and external ones through an internal, configurable, _proxy_.
 
