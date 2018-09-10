@@ -13,9 +13,10 @@ const {Glyphicon} = require('react-bootstrap');
 const assign = require('object-assign');
 
 const {changeLayerProperties} = require('../actions/layers');
+const {isArray} = require('lodash');
 
 const BackgroundSwitcherPlugin = connect((state) => ({
-    layers: state.layers && state.layers.flat && state.layers.flat.filter((layer) => layer.group === "background") || []
+    layers: state.layers && !isArray(state.layers) && state.layers.flat && state.layers.flat.filter((layer) => layer.group === "background") || []
 }), {
     propertiesChangeHandler: changeLayerProperties
 })(require('../components/TOC/background/BackgroundSwitcher'));

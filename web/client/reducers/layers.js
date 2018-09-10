@@ -113,25 +113,25 @@ const moveNode = (groups, node, groupId, newLayers, foreground = true) => {
 function layers(state = [], action) {
     switch (action.type) {
         case LAYER_LOADING: {
-            const newLayers = (state.flat || []).map((layer) => {
+            const newLayers = (!isArray(state) && state.flat || []).map((layer) => {
                 return layer.id === action.layerId ? assign({}, layer, {loading: true, loadingError: false}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
         case LAYER_LOAD: {
-            const newLayers = (state.flat || []).map((layer) => {
+            const newLayers = (!isArray(state) && state.flat || []).map((layer) => {
                 return layer.id === action.layerId ? assign({}, layer, {loading: false, loadingError: action.error ? "Error" : false}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
         case LAYER_ERROR: {
-            const newLayers = (state.flat || []).map((layer) => {
+            const newLayers = (!isArray(state) && state.flat || []).map((layer) => {
                 return layer.id === action.layerId ? assign({}, layer, {loading: false, loadingError: true}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }
         case CHANGE_LAYER_PROPERTIES: {
-            const flatLayers = (state.flat || []);
+            const flatLayers = (!isArray(state) && state.flat || []);
             let isBackground = flatLayers.reduce(
                     (background, layer) => background || (layer.id === action.layer && layer.group === 'background'),
             false);
@@ -178,7 +178,7 @@ function layers(state = [], action) {
             }
         }
         case UPDATE_NODE: {
-            const flatLayers = (state.flat || []);
+            const flatLayers = (!isArray(state) && state.flat || []);
             const selector = action.nodeType === 'groups' ? 'group' : 'id';
 
             // const newGroups = action.options && action.options.group && action.options.group !== layer;
@@ -210,7 +210,7 @@ function layers(state = [], action) {
             return assign({}, state, {flat: newLayers});
         }
         case INVALID_LAYER: {
-            const flatLayers = (state.flat || []);
+            const flatLayers = (!isArray(state) && state.flat || []);
 
             const newLayers = flatLayers.map((layer) => {
                 if (layer.id === action.options.id) {
@@ -240,7 +240,7 @@ function layers(state = [], action) {
             }
         }
         case ADD_LAYER: {
-            let newLayers = (state.flat || []).concat();
+            let newLayers = (!isArray(state) && state.flat || []).concat();
             let newGroups = (state.groups || []).concat();
             const newLayer = (action.layer.id) ? action.layer : assign({}, action.layer, {id: LayersUtils.getLayerId(action.layer, newLayers)});
             newLayers.push(newLayer);
