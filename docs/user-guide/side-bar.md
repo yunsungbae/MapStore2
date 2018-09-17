@@ -29,7 +29,14 @@ Zooming tools
 
 3D Navigation
 -------------
-Based
+Based on CesiumJS, a 3D Navigator is implemented in [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) that allows you to display the map contents in 3D mode, particularly the layers will be overlaid on the globe.
+
+* **Open** a new map then **Add** a layer. 
+* **Click** on the 3D icon <img src="img/3D-icon.png" style="max-width:22px;"/> in the *Sidebar*.
+
+The scene will switch from 2D to 3D display mode and you will be guided by a brief tutorial that explain you how to interact with the map.  
+
+<img src="img/3D-mode.png" style="max-width:600px;" />
 
 
 

@@ -89,7 +89,7 @@ After adding a layer, several options can be accessed from the TOC allowing you 
 The remaining tools will be faced in detail in separate sections:
 
 *  <img src="img/properties.png" /> [Layer Settings](layer-settings): allows you to manage the layers in groups, to set the display mode and the style of the layers, and to set the format of the feature info.
-*  <img src="img/attributes-table.png" /> [Attributes Table](attributes-table): allows you to visualize, query, edit and analyze your data. 
+*  <img src="img/attributes-table.png" /> [Attribute Table](attributes-table): allows you to visualize, query, edit and analyze tabular data related to the layer. 
 * <img src="img/widgets.png" /> [Widgets](widgets): allows you to create charts, texts, tables and add them to the map. 
 
 

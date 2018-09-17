@@ -12,9 +12,9 @@ The *Search Bar* of the portal allows you to find point of interests (POIs), str
 
   <img src="img/rome.png" style="max-width:700px;" />
 
-Option Menu
+Burger Menu
 -----------
-The *Option Menu* is the core of the *Menu Bar* and will be treated in details. It contains several options to add data from different sources to the map, perform measurments, and to save, print and share the created map. 
+The *Burger Menu* is the core of the *Menu Bar* and will be treated in details. It contains several options to add data from different sources to the map, perform measurments, and to save, print and share the created map. 
 
 <img src="img/menu-options.png" style="max-height:500px;" />
 
@@ -23,9 +23,9 @@ The *Option Menu* is the core of the *Menu Bar* and will be treated in details. 
 
 Click on the following links to learn more about the main options:
 
+* [PRINT](print): allows you to print a created map;
 * [ADD LOCAL VECTOR FILES](local-files): allows to import from your machine vector files to be added to  the map;
 * [CATALOG](catalog): allows you to import data from several remote services;
 * [MEASURE](measure): tools to perform measurments on the map;
 * [ANNOTATIONS](annotations): allows you to create customized annotations and add them to the map;
-* [PRINT](print): allows you to print a created map;
 * [SHARE](share): allows you to share your map.    
