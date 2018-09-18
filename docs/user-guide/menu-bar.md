@@ -1,7 +1,11 @@
-#Menu Bar
+# Menu Bar
 *********
 
-In this section you will learn how to use the *Menu Bar*. As mentioned before, it includes connections to the *Home Page* and the *Account*, and:  
+In this section you will learn how to use the *Menu Bar*. As mentioned before, it includes connections to the <span style="color:red">*Home Page*</span> and the <span style="color:blue">*Account*</span>.   
+
+  <img src="img/menu-bar.png" style="max-width:500px;" />
+
+It contains also a *Search bar* and a *Burger menu* that will be treated in details here below.
 
 Search Bar
 ----------

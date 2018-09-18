@@ -27,7 +27,7 @@ The *Accounts manager* is reserved to the *Administrator* where he can manage *U
 
 Search bar
 ------------
-Under the menu bar, you can use the *Search bar* to search stored maps and dashboards in [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/).
+Under the menu bar, you can use the *Search bar* to search stored maps and dashboards in [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/).
 
 <img src="img/search-bar.png" style="max-width:500px;" />
 
