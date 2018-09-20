@@ -26,7 +26,7 @@ The annotation will be added to the TOC and to the annotations list as in the fi
 
 <img src="img/annotation-geosolutions-1.png" style="max-width:700px;" />
 
-Editing Annotation
+Editing an Annotation
 ------------------
 
 From the annotations list on the right:
